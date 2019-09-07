@@ -1,0 +1,37 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>{{ title }} | Sphinx</title>
+        {% include 'base_meta.html' %}
+        {% include 'base_css.html' %}
+
+        {% block custom_css %}
+        {% comment %} Use this Block to load custom styling of each page {% endcomment %}
+        {% endblock %}
+    </head>
+
+    <body>
+
+        {% comment %} NAVBAR {% endcomment %}
+        {% include 'nav.html' %}
+
+        {% comment %} MESSAGES are already included. Just send all the messages with the key 'messages' and all the errors with the key 'errors' {% endcomment %}
+        {% include 'messages.html' %}
+
+        {% block body %}
+        {% comment %} This Block will contain the page body. {% endcomment %}
+        {% endblock %}
+
+        {% comment %}SCRIPTS{% endcomment %}
+        {% include 'base_js.html' %}
+
+        {% block custom_script %}
+            {% comment %} Use this block to load custom JavaScript for each of the pages {% endcomment %}
+        {% endblock %}
+
+
+    </body>
+
+</html>
