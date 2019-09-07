@@ -85,7 +85,7 @@ class Education(models.Model):
     description = models.TextField(max_length=1000, blank=True, null=True)
 
     def __str__(self):
-        return "{}-{}".format(self.profile.user.username, self.degree)
+        return "{}-{}".format(self.profile.user.username, self.school)
 
     class Meta:
         verbose_name = 'Education'
