@@ -63,9 +63,11 @@ class CertificationAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ()
 
-# class JobApplication(admin.ModelAdmin):
-#
-#
+class JobApplicationAdmin(admin.ModelAdmin):
+   list_display = ('title','org','type')
+   search_fields = ('title','org')
+
+
 
 
 admin.site.register(Client, UserAdmin)
@@ -74,4 +76,5 @@ admin.site.register(Education, EducationAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Certifications, CertificationAdmin)
 admin.site.register(OrgProfile, OrgProfileAdmin)
+admin.site.register(JobApplication,JobApplicationAdmin)
 
