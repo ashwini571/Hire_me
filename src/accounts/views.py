@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
-
+from .models import JobApplication
 
 def home(request):
-    return render(request, 'index.html', {'title': "Home"})
+    all_jobs = JobApplication.objects.all()
+    return render(request, 'index.html', {'title': "Home",'jobs':all_jobs})
 
 
 def login_view(request):
@@ -28,8 +30,8 @@ def login_view(request):
         context = {'form': LoginForm(), 'title': 'login'}
     return render(request, 'login.html', context=context)
 
-
+@login_required
 def logout_view(request):
-    if request.method == 'POST':
         auth.logout(request)
         return redirect('accounts:home')
+
