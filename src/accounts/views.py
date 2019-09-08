@@ -1,13 +1,19 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm
-from .models import JobApplication
+from .forms import LoginForm, ClientRegistrationForm
+from .models import JobApplication, Client
+
 
 
 def home(request):
+<<<<<<< HEAD
     all_jobs = JobApplication.objects.all()[:5]
     return render(request, 'index.html', {'title': "Home",'jobs':all_jobs})
+=======
+    all_jobs = JobApplication.objects.all()
+    return render(request, 'index.html', {'title': "Home", 'jobs': all_jobs})
+>>>>>>> f9c225bfd2a0ce96326c93bf8c14283eab457f43
 
 
 def login_view(request):
@@ -45,3 +51,37 @@ def get_org_profile(request, id):
     else:
         context = {'org_profile': org}
     return render(request, 'company_profile', context=context)
+
+
+def registration_view(request):
+    if request.user.is_authenticated:
+        return redirect('accounts:home')
+    if request.method == 'POST':
+        form = ClientRegistrationForm(request.POST)
+        context = {'title': 'Sign Up', 'form': form}
+        if form.is_valid():
+
+            cd = form.cleaned_data
+            username = cd['username']
+            password = cd['password']
+            email = cd['email']
+            first_name = cd['first_name']
+            last_name = cd['last_name']
+            user_type = cd['type']
+
+            user = Client.objects.create(username=username, email=email, first_name=first_name,
+                                         last_name=last_name, type=user_type)
+            user.set_password(password)
+            user.save()
+
+            usr = auth.authenticate(username=username, password=password)
+            auth.login(request, usr)
+            return redirect('accounts:home')
+
+        else:
+            print('errors')
+            return render(request, 'reg_form.html', context=context)
+    else:
+        form = ClientRegistrationForm()
+        return render(request, 'reg_form.html', context={'title': 'Sign Up', 'form': form})
+

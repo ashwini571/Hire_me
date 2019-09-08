@@ -3,7 +3,7 @@
 
 {% block body %}
 
-{% if not user.is_authenticated %}
+{% if user.is_authenticated %}
     <!-- Titlebar
 ================================================== -->
 <div id="titlebar" class="gradient">
@@ -11,15 +11,9 @@
 		<div class="row">
 			<div class="col-md-12">
 
-				<h2>Log In</h2>
+				<h2>Add Certifications</h2>
 
 				<!-- Breadcrumbs -->
-				<nav id="breadcrumbs" class="dark">
-					<ul>
-						<li><a href="#">Home</a></li>
-						<li>Log In</li>
-					</ul>
-				</nav>
 
 			</div>
 		</div>
@@ -30,23 +24,22 @@
 ================================================== -->
 <div class="container">
 	<div class="row">
-		<div class="col-xl-5 offset-xl-3">
+		<div class="col-xl-8 offset-xl-2">
 
 
 			<div class="login-register-page">
 				<!-- Welcome Text -->
 				<div class="welcome-text">
-					<h3>We're glad to see you again!</h3>
-					<span>Don't have an account? <a href="{% url 'accounts:signup' %}">Sign Up!</a></span>
+					<h3>A proof is always better</h3>
 				</div>
 				<!-- Form -->
 
-                    <div class="container">
+                    <div class="">
                         <div class="card">
-                            <form action="{% url 'accounts:login' %}" method="POST">
+                            <form action="{% url 'accounts:create_user_profile' %}" method="POST">
                                 {% csrf_token %}
                                 {{ form }}
-                                <button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" >Log In <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                <button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" >Submit <i class="icon-material-outline-add"></i></button>
                             </form>
                         </div>
                     </div>
@@ -66,6 +59,5 @@
 
 {%  endif %}
 
-{% include 'footer.html' %}
 
 {%  endblock %}

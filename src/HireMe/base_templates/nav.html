@@ -41,6 +41,7 @@
 			<div class="right-side">
                 {% if user.is_authenticated %}
 				<!--  User Notifications -->
+                    <a href="{% url 'accounts:logout' %}"><i class="icon-material-outline-power-settings-new"></i> Logout</a>
 				<div class="header-widget hide-on-mobile">
 
 					<!-- Notifications -->
@@ -130,7 +131,7 @@
 					<!-- Messages -->
 					<div class="header-notifications user-menu">
 						<div class="header-notifications-trigger">
-							<a href="#"><div class="user-avatar status-online"><img src="{% static 'images/user-avatar-placeholder.png'%}" alt=""></div></a>
+							<a href="#"><div class="user-avatar status-online"><img src="{{ user.image_url }}" alt=""></div></a>
 						</div>
 
 						<!-- Dropdown -->
@@ -142,7 +143,7 @@
 
 								<!-- User Name / Avatar -->
 								<div class="user-details">
-									<div class="user-avatar status-online"><img src="{% static 'images/user-avatar-placeholder.png'%}" alt=""></div>
+									<div class="user-avatar status-online"><img src="{{ user.image_url }}" alt=""></div>
 									<div class="user-name">
 										{{ user.first_name }} {{ user.last_name }}<span></span>
 									</div>
