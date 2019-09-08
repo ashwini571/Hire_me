@@ -2,7 +2,6 @@
 {%  load static %}
 
 {% block body %}
-
 <!-- Dashboard Container -->
 <div class="dashboard-container">
 
@@ -140,7 +139,8 @@
 											<div class="bidding-widget">
 												<!-- Headline -->
 												<span class="bidding-detail">Set your <strong>minimal hourly rate</strong></span>
-                                         <form>
+                                         <form method="post" enctype="multipart/form-data" action="{% url 'accounts:edit_user_profile' %}">
+                                             {% csrf_token %}
 												<!-- Slider -->
 												<div class="bidding-value margin-bottom-10">$<span id="biddingVal"></span></div>
 												<input class="bidding-slider" type="text" value="" data-slider-handle="custom" data-slider-currency="$" data-slider-min="5" data-slider-max="150" data-slider-value="35" data-slider-step="1" data-slider-tooltip="hide" />
@@ -188,9 +188,13 @@
 
 											<!-- Upload Button -->
 											<div class="uploadButton margin-top-0">
-												<input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload" multiple/>
+												<input class="uploadButton-input" type="file"  id="upload" name="resume"/>
 												<label class="uploadButton-button ripple-effect" for="upload">Upload Files</label>
-												<span class="uploadButton-file-name">Maximum file size: 10 MB</span>
+                                                {% if user.profile.resume %}
+                                                <a href="{{ user.profile.resume.url }}"><span class="uploadButton-file-name">{{ user.profile.resume.name }}</span></a>
+                                                {% else %}
+                                               <span class="uploadButton-file-name">Upload a resume</span>
+                                                {% endif %}
 											</div>
 
 										</div>
@@ -205,7 +209,7 @@
 											<!-- Skills List -->
 											<div class="keywords-container">
 												<div class="keyword-input-container">
-													<input type="text" class="keyword-input with-border" placeholder="e.g. English,Hindi" name='languages'>
+													<input type="text" class="keyword-input with-border" placeholder="e.g. English,Hindi" value="{{ user.profile.languages }}" name='languages'>
 
 												</div>
 												<div class="clearfix"></div>
@@ -219,10 +223,10 @@
 											<!-- Skills List -->
 											<div class="keywords-container">
 												<select name="gender" id="id_gender">
+                                                    <option value="{{ user.profile.gender }}" selected="selected" disabled="disabled">{{ user.profile.get_gender_display }}</option>
                                                    <option value="m">Male</option>
                                                     <option value="f">Female</option>
                                                     <option value="o">Others</option>
-
                                                </select>
 												<div class="clearfix"></div>
 											</div>
@@ -237,14 +241,14 @@
 									<div class="col-xl-12">
 										<div class="submit-field">
 											<h5>Introduce Yourself</h5>
-											<textarea cols="30" rows="5" class="with-border">{{ user.profile.about }}</textarea>
+											<textarea cols="30" rows="5" class="with-border" name="about">{{ user.profile.about }}</textarea>
 										</div>
 									</div>
 
 								</div>
 
                                 <div class="row">
-                                    <a href="#" class="button ripple-effect">Save Changes</a>
+                                    <button type="submit" class="button ripple-effect">Save Changes</button>
                                 </div>
 							</li>
 						</ul>

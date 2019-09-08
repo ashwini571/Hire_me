@@ -51,8 +51,8 @@ def change_basic_user_data(request):
                 print('Deleted Previous image. \n Now saving new')
 
             format_name = request.FILES.get('image').name.split('.')
-            request.FILES.get('image').name = "{}.{}".format(user_instance.username, format_name[1])
-            print("renamed Image") # Rename Uploaded file
+            request.FILES.get('image').name = "{}.{}".format(user_instance.username, format_name[-1])
+            print("renamed Image")  # Rename Uploaded file
             user_instance.profile_image = request.FILES.get('image')
 
         user_instance.save()
@@ -73,7 +73,21 @@ def create_user_profile_view(request):
             if form.is_valid():
                 profile = form.save(commit=False)
                 profile.user = request.user
-                profile.resume = request.FILES.get('resume')
+
+                if request.FILES.get('resume'):  # Delete previous and rename image
+                    print("Resume Found")
+                    if profile.resume:  # Delete previous image. Make profile_image None
+                        os.remove(os.path.join(settings.MEDIA_ROOT, profile.resume.name))
+                        profile.resume = None
+                        profile.save()
+                        print('Deleted Previous Resume. \n Now saving new')
+
+                    format_name = request.FILES.get('resume').name.split('.')
+                    request.FILES.get('resume').name = "{}-{}.{}".format(request.user.username,
+                                                                         "resume", format_name[-1])
+                    print("renamed Image")  # Rename Uploaded file
+                    profile.resume = request.FILES.get('resume')
+
                 profile.save()
                 return redirect('accounts:add_education')
             else:
@@ -137,3 +151,37 @@ def add_certificate_view(request):
     else:
         form = CertificationsForm()
         return render(request, 'certfificateAdditionForm.html', context={'title': 'Certificate', 'form': form})
+
+
+@login_required(login_url='/login')
+def edit_user_profile(request):
+    profile = request.user.profile
+    if profile is None:
+        return redirect('accounts:create_user_profile')
+    if request.method == 'POST':
+        skills = request.POST.get('skills')
+        lang = request.POST.get('languages')
+        sex = request.POST.get('gender') if request.POST.get('gender') else profile.gender
+        about = profile.about if not request.POST.get('about') else request.POST.get('about')
+
+        profile.skills = skills
+        profile.languages = lang
+        profile.gender = sex
+        profile.about = about
+
+        if request.FILES.get('resume'):  # Delete previous and rename image
+            print("Resume Found")
+            if profile.resume:  # Delete previous image. Make profile_image None
+                os.remove(os.path.join(settings.MEDIA_ROOT, profile.resume.name))
+                profile.resume = None
+                profile.save()
+                print('Deleted Previous Resume. \n Now saving new')
+
+            format_name = request.FILES.get('resume').name.split('.')
+            request.FILES.get('resume').name = "{}-{}.{}".format(request.user.username,
+                                                                 "resume", format_name[-1])
+            print("renamed Image")  # Rename Uploaded file
+            profile.resume = request.FILES.get('resume')
+
+        profile.save()
+    return redirect('accounts:settings')

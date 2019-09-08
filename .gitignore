@@ -315,3 +315,4 @@ $RECYCLE.BIN/
 ### Static Files and Media
 src/assets/
 src/media
+src/accounts/migrations
