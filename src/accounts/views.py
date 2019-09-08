@@ -31,8 +31,17 @@ def login_view(request):
         context = {'form': LoginForm(), 'title': 'login'}
     return render(request, 'login.html', context=context)
 
+
 @login_required
 def logout_view(request):
         auth.logout(request)
         return redirect('accounts:home')
 
+
+def get_org_profile(request, id):
+    org = OrgProfile.objects.get(user = Client.objects.get(username=id))
+    if request.user.username == id:
+        context = {'add_job': 1, 'org_profile': org}
+    else:
+        context = {'org_profile': org}
+    return render(request, 'company_profile', context=context)
