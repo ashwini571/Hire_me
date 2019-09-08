@@ -163,8 +163,13 @@ def edit_user_profile(request):
         lang = request.POST.get('languages')
         sex = request.POST.get('gender') if request.POST.get('gender') else profile.gender
         about = profile.about if not request.POST.get('about') else request.POST.get('about')
+        skills = skills.split(',')
 
-        profile.skills = skills
+        # first we will clear all previous tags
+        profile.skills.clear()
+        for skill in skills:
+            print(skill)
+            profile.skills.add(skill)
         profile.languages = lang
         profile.gender = sex
         profile.about = about

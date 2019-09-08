@@ -1,5 +1,5 @@
 {% load static %}
-<div id="wrapper">
+
 <header id="header-container" class="fullwidth dashboard-header not-sticky">
 
 	<!-- Header -->
@@ -24,7 +24,7 @@
 
 						<li><a href="#">For Employers</a></li>
 
-						<li><a href="#" class="current">Dashboard</a></li>
+						<li><a href="{% url 'accounts:dashboard' %}" class="current">Dashboard</a></li>
 
 						<li><a href="#">Pages</a></li>
 
@@ -194,5 +194,5 @@
 	<!-- Header / End -->
 
 </header>
-</div>
+
 <div class="clearfix"></div>

@@ -76,7 +76,7 @@ class UserProfile(models.Model):
 
 
 class OrgProfile(models.Model):
-    user = models.OneToOneField(Client, on_delete=models.CASCADE)
+    user = models.OneToOneField(Client, on_delete=models.CASCADE, related_name='profile_org')
     verification = models.BooleanField(default=True)
     about = models.TextField(blank=False,null=False,max_length=10000)
     mis_vis = models.TextField(blank=False,null=False,max_length=10000)
@@ -84,6 +84,9 @@ class OrgProfile(models.Model):
     area_of_work = TaggableManager()
     teams = models.CharField(blank=False, null=False, max_length=100)
     # location = p
+
+    def entity_as_list(self):
+        return self.entity.split(',')
 
     def __str__(self):
         return self.user.username

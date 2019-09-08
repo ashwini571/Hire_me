@@ -10,6 +10,14 @@ def home(request):
     return render(request, 'index.html', {'title': "Home", 'jobs':all_jobs})
 
 
+def dashboard(request):
+    usr = request.user
+    if usr.is_organisation():
+        return render(request, 'company_dash.html', context={'user': usr})
+    else:
+        return render(request, 'user_dash.html')
+
+
 def settings(request):
     usr = request.user
     if usr.is_organisation():
