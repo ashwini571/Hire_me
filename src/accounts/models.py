@@ -77,7 +77,7 @@ class UserProfile(models.Model):
 
 class OrgProfile(models.Model):
     user = models.OneToOneField(Client, on_delete=models.CASCADE)
-    verification =  models.BooleanField(default=True)
+    verification = models.BooleanField(default=True)
     about = models.TextField(blank=False,null=False,max_length=10000)
     mis_vis = models.TextField(blank=False,null=False,max_length=10000)
     why = models.TextField(blank=False,null=False,max_length=10000)
@@ -152,8 +152,8 @@ class Project(models.Model):
 
 class JobApplication(models.Model):
     choices = (
-        ('f','Full-Time'),
-        ('i','Intern'),
+        ('f', 'Full-Time'),
+        ('i', 'Intern'),
     )
     org = models.ForeignKey(OrgProfile, on_delete=models.CASCADE, related_name='JobApplication')
     title = models.CharField(blank=False, null=False, max_length=100)
@@ -161,4 +161,11 @@ class JobApplication(models.Model):
     type = models.CharField(max_length=2, choices=choices, default='f')
     descr = models.TextField(blank=False)
     location = models.CharField(blank=False, null=False, max_length=100)
+
+    class Meta:
+        verbose_name = 'Job Application'
+        verbose_name_plural = 'Job Applications'
+
+    def __str__(self):
+        return "{}-{}".format(self.org.user.username, self.title)
 
