@@ -1,11 +1,72 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+
 {% if not user.is_authenticated %}
-    <div class="container">
-        <div>
-            <form action="{% url 'accounts:login' %}" method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    </div>
+    <!-- Titlebar
+================================================== -->
+<div id="titlebar" class="gradient">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2>Log In</h2>
+
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs" class="dark">
+					<ul>
+						<li><a href="#">Home</a></li>
+						<li>Log In</li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+ <!-- Page Content
+================================================== -->
+<div class="container">
+	<div class="row">
+		<div class="col-xl-5 offset-xl-3">
+
+
+			<div class="login-register-page">
+				<!-- Welcome Text -->
+				<div class="welcome-text">
+					<h3>We're glad to see you again!</h3>
+					<span>Don't have an account? <a href="pages-register.html">Sign Up!</a></span>
+				</div>
+
+				<!-- Form -->
+
+                    <div class="container">
+                        <div class="card">
+                            <form action="{% url 'accounts:login' %}" method="POST">
+                                {% csrf_token %}
+                                {{ form }}
+                                <button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" >Log In <i class="icon-material-outline-arrow-right-alt"></i></button>
+                            </form>
+                        </div>
+                    </div>
+y
+
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+    <br>
+    <br>
+    <br>
+
+
 {%  endif %}
+
+{% include 'footer.html' %}
+
+{%  endblock %}

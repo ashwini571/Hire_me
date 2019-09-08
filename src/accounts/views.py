@@ -4,11 +4,14 @@ from .forms import LoginForm
 
 
 def home(request):
-    return render(request, 'base.html', {'title': "Home"})
+    return render(request, 'index.html', {'title': "Home"})
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('accounts:home')
     if request.method == 'POST':
+        print("hola")
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']

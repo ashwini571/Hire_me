@@ -1,3 +1,4 @@
 Django==2.1.7
 django-taggit
 django-location-field==2.1.0
+django-crispy-forms

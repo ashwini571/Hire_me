@@ -39,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'taggit',
+    'crispy_forms',
     'location_field.apps.DefaultConfig',
 
 ]
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Custom User model
 AUTH_USER_MODEL = 'accounts.Client'
 

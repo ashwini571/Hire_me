@@ -16,7 +16,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class OrgProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'area_of_work')
+    list_display = ('user', 'verification')
 
 
 class UserProfileAdmin(admin.ModelAdmin):

@@ -77,12 +77,14 @@ class UserProfile(models.Model):
 
 class OrgProfile(models.Model):
     user = models.OneToOneField(Client, on_delete=models.CASCADE)
+    verification =  models.BooleanField(default=True)
     about = models.TextField(blank=False,null=False,max_length=10000)
     mis_vis = models.TextField(blank=False,null=False,max_length=10000)
     why = models.TextField(blank=False,null=False,max_length=10000)
     area_of_work = TaggableManager()
     teams = models.CharField(blank=False, null=False, max_length=100)
     # location = p
+
     def __str__(self):
         return self.user.username
 
@@ -90,6 +92,7 @@ class OrgProfile(models.Model):
         verbose_name = 'Org Profile'
         verbose_name_plural = 'Org Profiles'
         db_table = 'org_profiles'
+
 
 class Education(models.Model):
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='education')
