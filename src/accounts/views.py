@@ -4,8 +4,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
 from .models import JobApplication
 
+
 def home(request):
-    all_jobs = JobApplication.objects.all()
+    all_jobs = JobApplication.objects.all()[:5]
     return render(request, 'index.html', {'title': "Home",'jobs':all_jobs})
 
 
