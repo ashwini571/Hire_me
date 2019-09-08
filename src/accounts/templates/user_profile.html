@@ -9,7 +9,7 @@
 	<!-- Dashboard Content
 	================================================== -->
 	<div class="dashboard-content-container">
-		<form class="dashboard-content-inner" >
+		<div class="dashboard-content-inner" >
 
 			<!-- Dashboard Headline -->
 			<div class="dashboard-headline">
@@ -27,9 +27,10 @@
 
 			<!-- Row -->
 			<div class="row">
-                <form action="">
+                <form action="{% url 'accounts:modify_user' %}" enctype="multipart/form-data" method="post" class="col-xl-12">
+                    {% csrf_token %}
 				<!-- Dashboard Box -->
-				<div class="col-xl-12">
+				<div class="">
 					<div class="dashboard-box margin-top-0">
 
 						<!-- Headline -->
@@ -43,9 +44,8 @@
 
 								<div class="col-auto">
 									<div class="avatar-wrapper" data-tippy-placement="bottom" title="Change Avatar">
-										<img class="profile-pic" src="images/user-avatar-placeholder.png" alt="" />
-										<div class="upload-button"></div>
-										<input class="file-upload" type="file" accept="image/*"/ name="dp">
+										<img class="profile-pic" src="{{ user.image_url }}" alt=""  onclick="document.getElementById('my_file').click()"/>
+										<input type="file" id="my_file" style="display: none;" name="image">
 									</div>
 								</div>
 
@@ -55,19 +55,19 @@
 										<div class="col-xl-6">
 											<div class="submit-field">
 												<h5>First Name</h5>
-												<input type="text" class="with-border" value="{{ user.first_name }}">
+												<input type="text" class="with-border" value="{{ user.first_name }}" name="first_name">
 											</div>
 										</div>
 
 										<div class="col-xl-6">
 											<div class="submit-field">
 												<h5>Last Name</h5>
-												<input type="text" class="with-border" value="{{ user.last_name }}">
+												<input type="text" class="with-border" value="{{ user.last_name }}" name="last_name">
 											</div>
 										</div>
 
 										<div class="col-xl-6">
-											<a href="#" class="button ripple-effect">Save Changes</a>
+											<button type="submit" class="button button-sliding-icon ripple-effect">Save Changes <i class="icon-material-outline-save-alt"></i></button>
 										</div>
 
 									</div>
@@ -87,33 +87,34 @@
 						<div class="headline">
 							<h3><i class="icon-material-outline-lock"></i> Password & Security</h3>
 						</div>
-                        <form action="">
+                        <form action="{% url 'accounts:change_password' %}" method="post">
+                            {% csrf_token %}
 						<div class="content with-padding">
 							<div class="row">
 								<div class="col-xl-4">
 									<div class="submit-field">
 										<h5>Current Password</h5>
-										<input type="password" class="with-border">
+										<input type="password" class="with-border" name="old_password">
 									</div>
 								</div>
 
 								<div class="col-xl-4">
 									<div class="submit-field">
 										<h5>New Password</h5>
-										<input type="password" class="with-border">
+										<input type="password" class="with-border" name="new_password1">
 									</div>
 								</div>
 
 								<div class="col-xl-4">
 									<div class="submit-field">
 										<h5>Repeat New Password</h5>
-										<input type="password" class="with-border">
+										<input type="password" class="with-border" name="new_password2">
 									</div>
 								</div>
 
 							</div>
                             <div class="row">
-                                    <a href="#" class="button ripple-effect">Save Changes</a>
+                                    <button type="submit" class="button button-sliding-icon ripple-effect margin-top-10">Change! <i class="icon-material-outline-settings"></i></button>
                              </div>
 						</div>
                        </form>
@@ -252,7 +253,8 @@
 				</div>
 
 			</div>
-        </form>
+        </div>
+
 			<!-- Row / End -->
 
 			<!-- Footer -->

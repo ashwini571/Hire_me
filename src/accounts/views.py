@@ -7,13 +7,13 @@ from .models import JobApplication, Client
 
 def home(request):
     all_jobs = JobApplication.objects.all()[:5]
-    return render(request, 'index.html', {'title': "Home",'jobs':all_jobs})
+    return render(request, 'index.html', {'title': "Home", 'jobs':all_jobs})
 
 
 def settings(request):
     usr = request.user
     if usr.is_organisation():
-        return render(request, 'company_profile.html', context={'user':usr})
+        return render(request, 'company_profile.html', context={'user': usr})
     else:
         return render(request, 'user_profile.html')
 

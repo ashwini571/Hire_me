@@ -63,11 +63,10 @@ class CertificationAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ()
 
+
 class JobApplicationAdmin(admin.ModelAdmin):
-   list_display = ('title','org','type')
-   search_fields = ('title','org')
-
-
+    list_display = ('title', 'org', 'type')
+    search_fields = ('title', 'org')
 
 
 admin.site.register(Client, UserAdmin)

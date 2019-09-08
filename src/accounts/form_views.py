@@ -4,13 +4,36 @@ from .models import UserProfile, Certifications, Project, Education, Client
 from .forms import UserProfileForm, EducationForm, ProjectForm, CertificationsForm
 import os
 from HireMe import settings
+from django.contrib import auth, messages
+
+
+@login_required(login_url='/login')
+def password_change_view(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        new_password1 = request.POST.get('new_password1')
+        new_password2 = request.POST.get('new_password2')
+
+        if new_password1 == new_password2:
+            user = auth.authenticate(username=request.user.username, password=old_password)
+            if user == request.user:
+                user_instance = Client.objects.get(username=user.username)
+                user_instance.set_password(new_password1)
+                user_instance.save()
+                messages.success(request, 'Your password was successfully updated!')
+                return redirect('accounts:login')
+            else:
+                return HttpResponse("Old password is incorrect")
+        else:
+            return HttpResponse("Passwords do not match")
+    else:
+        return redirect('accounts:settings')
 
 
 @login_required(login_url='/login')
 def change_basic_user_data(request):
     if request.method == 'POST':
         user_instance = Client.objects.get(username=request.user.username)
-
         first_name = request.POST.get('first_name')
         if first_name:
             user_instance.first_name = first_name
@@ -20,7 +43,7 @@ def change_basic_user_data(request):
             user_instance.last_name = last_name
 
         if request.FILES.get('image'):  # Delete previous and rename image
-
+            print("Image Found")
             if user_instance.profile_image:  # Delete previous image. Make profile_image None
                 os.remove(os.path.join(settings.MEDIA_ROOT, user_instance.profile_image.name))
                 user_instance.profile_image = None
@@ -28,14 +51,15 @@ def change_basic_user_data(request):
                 print('Deleted Previous image. \n Now saving new')
 
             format_name = request.FILES.get('image').name.split('.')
-            request.FILES.get('image').name = "{}.{}".format(user_instance.username, format_name[1])  # Rename Uploaded file
+            request.FILES.get('image').name = "{}.{}".format(user_instance.username, format_name[1])
+            print("renamed Image") # Rename Uploaded file
             user_instance.profile_image = request.FILES.get('image')
-            user_instance.save()
+
         user_instance.save()
-        return redirect('accounts:home')
+        return redirect('accounts:settings')
 
     else:
-        return render(request, 'dummy_form.html')
+        return render(request, 'user_data_form.html')
 
 
 @login_required(login_url='/login')

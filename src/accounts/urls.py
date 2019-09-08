@@ -7,13 +7,10 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('login', views.login_view, name='login'),
     path('logout', views.logout_view, name='logout'),
-<<<<<<< HEAD
     path('settings', views.settings,name='settings'),
-=======
-
->>>>>>> 1a7fa586c4784161ca6639caed858840c76a3e29
     path('org_profile/<slug:id>', views.get_org_profile, name='get_org_profile'),
     path('signup', views.registration_view, name='signup'),
+    path('change_password', form_views.password_change_view, name='change_password'),
 
     path('edit/basic_info', form_views.change_basic_user_data, name='modify_user'),
 
