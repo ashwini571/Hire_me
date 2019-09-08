@@ -5,9 +5,15 @@ from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client
 
 
+
 def home(request):
+<<<<<<< HEAD
+    all_jobs = JobApplication.objects.all()[:5]
+    return render(request, 'index.html', {'title': "Home",'jobs':all_jobs})
+=======
     all_jobs = JobApplication.objects.all()
     return render(request, 'index.html', {'title': "Home", 'jobs': all_jobs})
+>>>>>>> f9c225bfd2a0ce96326c93bf8c14283eab457f43
 
 
 def login_view(request):
@@ -36,6 +42,15 @@ def login_view(request):
 def logout_view(request):
         auth.logout(request)
         return redirect('accounts:home')
+
+
+def get_org_profile(request, id):
+    org = OrgProfile.objects.get(user = Client.objects.get(username=id))
+    if request.user.username == id:
+        context = {'add_job': 1, 'org_profile': org}
+    else:
+        context = {'org_profile': org}
+    return render(request, 'company_profile', context=context)
 
 
 def registration_view(request):
@@ -69,5 +84,4 @@ def registration_view(request):
     else:
         form = ClientRegistrationForm()
         return render(request, 'reg_form.html', context={'title': 'Sign Up', 'form': form})
-
 
