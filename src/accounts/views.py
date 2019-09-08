@@ -10,6 +10,14 @@ def home(request):
     return render(request, 'index.html', {'title': "Home",'jobs':all_jobs})
 
 
+def settings(request):
+    usr = request.user
+    if usr.is_organisation():
+        return render(request, 'company_profile.html', context={'user':usr})
+    else:
+        return render(request, 'user_profile.html')
+
+
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('accounts:home')
@@ -70,7 +78,7 @@ def registration_view(request):
 
             usr = auth.authenticate(username=username, password=password)
             auth.login(request, usr)
-            return redirect('accounts:home')
+            return redirect('accounts:settings')
 
         else:
             print('errors')
