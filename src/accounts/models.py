@@ -60,7 +60,7 @@ class UserProfile(models.Model):
     )
 
     user = models.OneToOneField(Client, on_delete=models.CASCADE,related_name='profile')
-    gender = models.CharField(max_length=1, blank=True, null=True)
+    gender = models.CharField(choices=SEXES, max_length=1, blank=True, null=True)
     skills = TaggableManager()
     resume = models.FileField(upload_to='resumes/', blank=True, null=True)
     about = models.TextField(max_length=3000, blank=True, null=True)

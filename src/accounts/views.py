@@ -15,7 +15,7 @@ def settings(request):
     if usr.is_organisation():
         return render(request, 'company_profile.html', context={'user': usr})
     else:
-        return render(request, 'user_profile.html')
+        return render(request, 'user_profile.html', context={'title': 'Settings'})
 
 
 def login_view(request):
@@ -78,7 +78,7 @@ def registration_view(request):
 
             usr = auth.authenticate(username=username, password=password)
             auth.login(request, usr)
-            return redirect('accounts:settings')
+            return redirect('accounts:create_user_profile')
 
         else:
             print('errors')
