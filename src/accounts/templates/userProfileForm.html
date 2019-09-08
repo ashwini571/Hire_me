@@ -36,7 +36,7 @@
 
                     <div class="">
                         <div class="card">
-                            <form action="{% url 'accounts:create_user_profile' %}" method="POST">
+                            <form action="{% url 'accounts:create_user_profile' %}" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form }}
                                 <button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" >Submit <i class="icon-material-outline-add"></i></button>

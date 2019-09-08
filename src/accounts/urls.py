@@ -12,6 +12,6 @@ urlpatterns = [
     # FormURLS
     path('info/create_profile', form_views.create_user_profile_view, name='create_user_profile'),
     path('info/add_education', form_views.add_education_view, name='add_education'),
-    path('info/add_project', form_views.add_project_view, name='add_education'),
-    path('info/add_certificate', form_views.add_project_view, name='add_education'),
+    path('info/add_project', form_views.add_project_view, name='add_project'),
+    path('info/add_certificate', form_views.add_certificate_view, name='add_certificate'),
 ]
