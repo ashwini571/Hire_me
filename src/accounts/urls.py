@@ -8,8 +8,10 @@ urlpatterns = [
     path('login', views.login_view, name='login'),
     path('logout', views.logout_view, name='logout'),
 
-    path('org_profile/<slug:id>', views.get_org_profile, name='get_org_profile')
+    path('org_profile/<slug:id>', views.get_org_profile, name='get_org_profile'),
     path('signup', views.registration_view, name='signup'),
+
+    path('edit/basic_info', form_views.change_basic_user_data, name='modify_user'),
 
     # FormURLS
     path('info/create_profile', form_views.create_user_profile_view, name='create_user_profile'),

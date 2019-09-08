@@ -1,7 +1,41 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Certifications, Project, Education
+from .models import UserProfile, Certifications, Project, Education, Client
 from .forms import UserProfileForm, EducationForm, ProjectForm, CertificationsForm
+import os
+from HireMe import settings
+
+
+@login_required(login_url='/login')
+def change_basic_user_data(request):
+    if request.method == 'POST':
+        user_instance = Client.objects.get(username=request.user.username)
+
+        first_name = request.POST.get('first_name')
+        if first_name:
+            user_instance.first_name = first_name
+
+        last_name = request.POST.get('last_name')
+        if last_name:
+            user_instance.last_name = last_name
+
+        if request.FILES.get('image'):  # Delete previous and rename image
+
+            if user_instance.profile_image:  # Delete previous image. Make profile_image None
+                os.remove(os.path.join(settings.MEDIA_ROOT, user_instance.profile_image.name))
+                user_instance.profile_image = None
+                user_instance.save()
+                print('Deleted Previous image. \n Now saving new')
+
+            format_name = request.FILES.get('image').name.split('.')
+            request.FILES.get('image').name = "{}.{}".format(user_instance.username, format_name[1])  # Rename Uploaded file
+            user_instance.profile_image = request.FILES.get('image')
+            user_instance.save()
+        user_instance.save()
+        return redirect('accounts:home')
+
+    else:
+        return render(request, 'dummy_form.html')
 
 
 @login_required(login_url='/login')

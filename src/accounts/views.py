@@ -5,15 +5,9 @@ from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client
 
 
-
 def home(request):
-<<<<<<< HEAD
     all_jobs = JobApplication.objects.all()[:5]
     return render(request, 'index.html', {'title': "Home",'jobs':all_jobs})
-=======
-    all_jobs = JobApplication.objects.all()
-    return render(request, 'index.html', {'title': "Home", 'jobs': all_jobs})
->>>>>>> f9c225bfd2a0ce96326c93bf8c14283eab457f43
 
 
 def login_view(request):
