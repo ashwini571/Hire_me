@@ -28,7 +28,7 @@
 
 			<!-- Row -->
 			<div class="row">
-                <form action="{% url 'accounts:modify_user' %}" enctype="multipart/form-data" method="post" class="col-xl-12">
+                <form action="" enctype="multipart/form-data" method="post" class="col-xl-12">
                     {% csrf_token %}
 				<!-- Dashboard Box -->
 				<div class="">
@@ -72,11 +72,57 @@
 												<h5>Why choose {{ user.first_name }} ?</h5>
                                                <textarea type="text" class="with-border"  name="last_name"> {{ user.profile_org.why }} </textarea>											</div>
 										</div>
+                                     <div class="col-xl-4">
+										<div class="submit-field">
+											<h5>Areas of work </h5>
+
+											<!-- AOW List -->
+											<div class="keywords-container">
+												<div class="keyword-input-container">
+													<input id="1" type="text" class="keyword-input with-border" value="{{ user.profile_org.area_of_work.all|join:',' }}" name='skills'>
+
+												</div>
+												<div class="keywords-list">
+                                                   {% for aow in user.profile_org.area_of_work.all %}
+													<span class="keyword"><span class="keyword-text"></span><span class="keyword-text">{{ aow }}</span></span>
+                                                    {% endfor %}
+												</div>
+												<div class="clearfix"></div>
+
+
+											</div>
+										</div>
+									</div>
+                                   <div class="col-xl-8">
+										<div class="submit-field">
+											<h5>Our Team </h5>
+
+											<!-- AOW List -->
+											<div class="keywords-container">
+												<div class="keyword-input-container">
+													<input id="1" type="text" class="keyword-input with-border" value="{{ user.profile_org.teams}}" name='skills'>
+
+												</div>
+												<div class="keywords-list">
+                                                   {% for team in user.profile_org.teams.entity_as_list %}
+													<span class="keyword"><span class="keyword-text"></span><span class="keyword-text">{{ team }}</span></span>
+                                                    {% endfor %}
+												</div>
+												<div class="clearfix"></div>
+
+
+											</div>
+										</div>
+									</div>
 
 
 										<div class="col-xl-6">
 											<button type="submit" class="button button-sliding-icon ripple-effect">Save Changes <i class="icon-material-outline-save-alt"></i></button>
 										</div>
+                                        <br>
+                                        <br>
+                                        <br>
+
 
 									</div>
 								</div>

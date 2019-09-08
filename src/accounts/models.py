@@ -85,6 +85,9 @@ class OrgProfile(models.Model):
     teams = models.CharField(blank=False, null=False, max_length=100)
     # location = p
 
+    def entity_as_list(self):
+        return self.entity.split(',')
+
     def __str__(self):
         return self.user.username
 
