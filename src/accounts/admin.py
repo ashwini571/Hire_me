@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, Project, UserProfile, Certifications, Education
+from .models import Client, Project, UserProfile, Certifications, Education, JobApplication, OrgProfile
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -13,6 +13,10 @@ class UserAdmin(admin.ModelAdmin):
     )
     ordering = ('username', 'email', 'first_name', 'last_name')
     filter_horizontal = ()
+
+
+class OrgProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'verification')
 
 
 class UserProfileAdmin(admin.ModelAdmin):
@@ -59,10 +63,15 @@ class CertificationAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ()
 
+# class JobApplication(admin.ModelAdmin):
+#
+#
+
 
 admin.site.register(Client, UserAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Education, EducationAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Certifications, CertificationAdmin)
+admin.site.register(OrgProfile, OrgProfileAdmin)
 

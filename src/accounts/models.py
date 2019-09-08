@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
+from taggit.managers import TaggableManager
+# from location_field.models.spatial import LocationField
 
 
 class IndividualManager(models.Manager):
@@ -59,7 +61,7 @@ class UserProfile(models.Model):
 
     user = models.OneToOneField(Client, on_delete=models.CASCADE)
     gender = models.CharField(max_length=1, blank=True, null=True)
-    # skills
+    skills = TaggableManager()
     resume = models.FileField(upload_to='resumes/', blank=True, null=True)
     about = models.TextField(max_length=3000, blank=True, null=True)
     languages = models.CharField(blank=True, null=True, max_length=100)
@@ -71,6 +73,25 @@ class UserProfile(models.Model):
         verbose_name = 'User Profile'
         verbose_name_plural = 'User Profiles'
         db_table = 'user_profiles'
+
+
+class OrgProfile(models.Model):
+    user = models.OneToOneField(Client, on_delete=models.CASCADE)
+    verification =  models.BooleanField(default=True)
+    about = models.TextField(blank=False,null=False,max_length=10000)
+    mis_vis = models.TextField(blank=False,null=False,max_length=10000)
+    why = models.TextField(blank=False,null=False,max_length=10000)
+    area_of_work = TaggableManager()
+    teams = models.CharField(blank=False, null=False, max_length=100)
+    # location = p
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = 'Org Profile'
+        verbose_name_plural = 'Org Profiles'
+        db_table = 'org_profiles'
 
 
 class Education(models.Model):
@@ -127,3 +148,17 @@ class Project(models.Model):
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
         db_table = 'user_projects'
+
+
+class JobApplication(models.Model):
+    choices = (
+        ('f','Full-Time'),
+        ('i','Intern'),
+    )
+    org = models.ForeignKey(OrgProfile, on_delete=models.CASCADE, related_name='JobApplication')
+    title = models.CharField(blank=False, null=False, max_length=100)
+    salary = models.CharField(blank=False, null=False, max_length=100)
+    type = models.CharField(max_length=2, choices=choices, default='f')
+    descr = models.TextField(blank=False)
+    location = models.CharField(blank=False, null=False, max_length=100)
+
