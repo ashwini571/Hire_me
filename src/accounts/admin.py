@@ -25,7 +25,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     search_fields = ('user', 'about')
     fieldsets = (
         ('User', {'fields': ('user', 'gender')}),
-        ('Info', {'fields': ('about', 'resume', 'languages')}),
+        ('Info', {'fields': ('about', 'resume', 'languages','skills')}),
     )
     filter_horizontal = ()
 

@@ -5,15 +5,17 @@ from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client
 
 
-
 def home(request):
-<<<<<<< HEAD
     all_jobs = JobApplication.objects.all()[:5]
     return render(request, 'index.html', {'title': "Home",'jobs':all_jobs})
-=======
-    all_jobs = JobApplication.objects.all()
-    return render(request, 'index.html', {'title': "Home", 'jobs': all_jobs})
->>>>>>> f9c225bfd2a0ce96326c93bf8c14283eab457f43
+
+
+def settings(request):
+    usr = request.user
+    if usr.is_organisation():
+        return render(request, 'company_profile.html', context={'user':usr})
+    else:
+        return render(request, 'user_profile.html')
 
 
 def login_view(request):
@@ -76,7 +78,7 @@ def registration_view(request):
 
             usr = auth.authenticate(username=username, password=password)
             auth.login(request, usr)
-            return redirect('accounts:home')
+            return redirect('accounts:settings')
 
         else:
             print('errors')
