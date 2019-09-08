@@ -76,7 +76,7 @@ class UserProfile(models.Model):
 
 
 class OrgProfile(models.Model):
-    user = models.OneToOneField(Client, on_delete=models.CASCADE)
+    user = models.OneToOneField(Client, on_delete=models.CASCADE, related_name='profile_org')
     verification = models.BooleanField(default=True)
     about = models.TextField(blank=False,null=False,max_length=10000)
     mis_vis = models.TextField(blank=False,null=False,max_length=10000)

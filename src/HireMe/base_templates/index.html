@@ -152,8 +152,10 @@
 				<div class="col-lg-6 col-md-8 col-sm-12">
 					<h2>Hire experts or be hired. <br> For any job, any time.</h2>
 					<p>Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation is on the runway towards.</p>
-					<a href="{% url 'accounts:signup' %}" class="button button-sliding-icon ripple-effect big margin-top-20">Get Started <i class="icon-material-outline-arrow-right-alt"></i></a>
-				</div>
+					{% if not user.is_authenticated %}
+                    <a href="{% url 'accounts:signup' %}" class="button button-sliding-icon ripple-effect big margin-top-20">Get Started <i class="icon-material-outline-arrow-right-alt"></i></a>
+				    {% endif %}
+                </div>
 			</div>
 
 		</div>
