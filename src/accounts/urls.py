@@ -14,6 +14,7 @@ urlpatterns = [
     path('change_password', form_views.password_change_view, name='change_password'),
 
     path('edit/basic_info', form_views.change_basic_user_data, name='modify_user'),
+    path('post_job', views.post_job, name='post_job'),
 
     # FormURLS
     path('info/create_profile', form_views.create_user_profile_view, name='create_user_profile'),

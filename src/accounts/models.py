@@ -83,10 +83,10 @@ class OrgProfile(models.Model):
     why = models.TextField(blank=False,null=False,max_length=10000)
     area_of_work = TaggableManager()
     teams = models.CharField(blank=False, null=False, max_length=100)
-    # location = p
+    location = models.CharField(blank=False, null=False, max_length=100)
 
-    def entity_as_list(self):
-        return self.entity.split(',')
+    def teams_as_list(self):
+        return self.teams.split(',')
 
     def __str__(self):
         return self.user.username
@@ -157,13 +157,33 @@ class JobApplication(models.Model):
     choices = (
         ('f', 'Full-Time'),
         ('i', 'Intern'),
+        ('t', 'Temporary'),
+        ('p', 'Part-Time'),
+        ('fr', 'Freelance'),
+    )
+    cat_choice = (
+        ('af', 'Accounting and Finance'),
+        ('cde', 'Clerical and Date Entry'),
+        ('co', 'Counselling'),
+        ('ca', 'Court Administration'),
+        ('hr', 'Human Resources'),
+        ('in', 'Investigative'),
+        ('it', 'IT and Computers'),
+        ('law', 'Law Enforcement'),
+        ('mgmt', 'Management'),
+        ('mis', 'Miscellaneous'),
+        ('pr', 'Public Relations'),
     )
     org = models.ForeignKey(OrgProfile, on_delete=models.CASCADE, related_name='JobApplication')
     title = models.CharField(blank=False, null=False, max_length=100)
-    salary = models.CharField(blank=False, null=False, max_length=100)
+    category = models.CharField(max_length=7,choices=cat_choice,default='i')
+    salary = models.PositiveIntegerField(default=0)
     type = models.CharField(max_length=2, choices=choices, default='f')
     descr = models.TextField(blank=False)
     location = models.CharField(blank=False, null=False, max_length=100)
+    status = models.BooleanField(default=True)
+    applicants = models.ManyToManyField(UserProfile)
+    req_skills = TaggableManager()
 
     class Meta:
         verbose_name = 'Job Application'
