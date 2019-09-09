@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, ClientRegistrationForm
-from .models import JobApplication, Client
+from .models import JobApplication, Client, OrgProfile
+from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 def home(request):
@@ -12,8 +13,11 @@ def home(request):
 
 def dashboard(request):
     usr = request.user
+
     if usr.is_organisation():
-        return render(request, 'company_dash.html', context={'user': usr})
+        org = get_object_or_404(OrgProfile, user=usr)
+        jobs = JobApplication.objects.filter(org=org).values()
+        return render(request, 'company_dash.html', context={'user': usr,'jobs':jobs})
     else:
         return render(request, 'user_dash.html')
 
@@ -94,4 +98,24 @@ def registration_view(request):
     else:
         form = ClientRegistrationForm()
         return render(request, 'reg_form.html', context={'title': 'Sign Up', 'form': form})
+
+
+@login_required()
+def post_job(request):
+    if request.method == 'POST':
+        print(1)
+        application = JobApplication()
+        application.org = request.user.profile_org
+        application.title = request.POST.get('title')
+        application.type = request.POST.get('type')
+        application.category = request.POST.get('category')
+        application.salary = request.POST.get('salary')
+        application.location = request.POST.get('location')
+        application.descr = request.POST.get('about')
+        application.req_skills = request.POST.get('req_skills')
+        application.save()
+        return redirect('accounts:dashboard')
+    else:
+        print(0)
+        return render(request,'post_job.html')
 
