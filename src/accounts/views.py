@@ -92,7 +92,10 @@ def registration_view(request):
 
             usr = auth.authenticate(username=username, password=password)
             auth.login(request, usr)
-            return redirect('accounts:create_user_profile')
+            if usr.is_organisation():
+                return redirect('accounts:settings')
+            else:
+                return redirect('accounts:create_user_profile')
 
         else:
             print('errors')

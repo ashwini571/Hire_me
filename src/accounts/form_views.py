@@ -201,8 +201,55 @@ def edit_user_profile(request):
 @login_required()
 @company_required
 def create_edit_company_profile(request):
-    try:
-        get_object_or_404(OrgProfile, user=request.user)
-        pass
-    except:
-        pass
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        about = request.POST.get('about')
+        mis_vis = request.POST.get('mis_vis')
+        why_us = request.POST.get('why_us')
+        fields = request.POST.get('fields')
+        teams = request.POST.get('teams')
+        user = request.user
+        try:
+            profile = get_object_or_404(OrgProfile, user=request.user)
+            profile.about = about
+            profile.mis_vis = mis_vis
+            profile.why = why_us
+            profile.teams = teams
+            fields = fields.split(',')
+            profile.area_of_work.clear()
+            for field in fields:
+                print(field)
+                profile.area_of_work.add(field)
+
+            if image:
+                if user.profile_image:
+                    os.remove(os.path.join(settings.MEDIA_ROOT, user.profile_image.name))
+                    user.profile_image = None
+                    user.save()
+                    print('Deleted Previous Image. \n Now saving new')
+
+                format_name = request.FILES.get('image').name.split('.')
+                request.FILES.get('image').name = "{}-{}.{}".format(request.user.username,
+                                                                    "company", format_name[-1])
+                print("renamed Image")  # Rename Uploaded file
+                user.profile_image = request.FILES.get('image')
+                user.save()
+
+            profile.save()
+            return redirect('accounts:settings')
+
+        except:
+            profile = OrgProfile.objects.create(user=request.user, verification=True, about=about,
+                                                mis_vis=mis_vis, why=why_us, teams=teams)
+            profile.save()
+            if image:
+                user.profile_image = image
+                user.save()
+            fields = fields.split(',')
+            for field in fields:
+                print(field)
+                profile.area_of_work.add(field)
+            return redirect('accounts:settings')
+
+    else:
+        return redirect('accounts:settings')
