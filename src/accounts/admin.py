@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, Project, UserProfile, Certifications, Education, JobApplication, OrgProfile
+from .models import Client, Project, UserProfile, Certifications, Education, JobApplication, OrgProfile, AppliedJobs
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -69,11 +69,16 @@ class JobApplicationAdmin(admin.ModelAdmin):
     search_fields = ('title', 'org')
 
 
+class AppliedJobadmin(admin.ModelAdmin):
+    list_display = ('job', 'user', 'status')
+
+
 admin.site.register(Client, UserAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Education, EducationAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Certifications, CertificationAdmin)
 admin.site.register(OrgProfile, OrgProfileAdmin)
-admin.site.register(JobApplication,JobApplicationAdmin)
+admin.site.register(JobApplication, JobApplicationAdmin)
+admin.site.register(AppliedJobs, AppliedJobadmin)
 

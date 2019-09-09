@@ -149,3 +149,21 @@ def create_job_id(digits):
     else:
         create_quiz_id(digits)  # If uid already exists recreate uid
 
+
+def view_job(request, id):
+    user = request.user
+    job = JobApplication.objects.get(id=id)
+    try:
+        application = AppliedJobs.objects.filter(id=id).filter(user=user)
+    except:
+        application = None
+    print(application)
+
+    if request.user.is_organisation:
+        return render(request, 'view_single_job.html',context={'job':job, 'user': user})
+    else:
+        return render(request, 'view_single_job.html', context={'job': job, 'user': user,'application':application})
+
+
+
+

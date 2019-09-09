@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
 from taggit.managers import TaggableManager
+from django.utils.timezone import now
 # from location_field.models.spatial import LocationField
 
 
@@ -183,7 +184,7 @@ class JobApplication(models.Model):
     descr = models.TextField(blank=False)
     location = models.CharField(blank=False, null=False, max_length=100)
     status = models.BooleanField(default=True)
-    applicants = models.ManyToManyField(UserProfile,null=True,blank=True)
+    applicants = models.ManyToManyField(UserProfile,blank=True)
     req_skills = TaggableManager()
 
     class Meta:
@@ -193,3 +194,11 @@ class JobApplication(models.Model):
     def __str__(self):
         return "{}-{}".format(self.org.user.username, self.title)
 
+
+class AppliedJobs(models.Model):
+    job = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='applied_job')
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='applied_user')
+    response = models.TextField(blank=True)
+    date_applied = models.DateTimeField(default=now)
+    date_responded = models.DateTimeField()
+    status = models.BooleanField(default=False)

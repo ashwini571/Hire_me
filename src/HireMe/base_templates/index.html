@@ -70,7 +70,7 @@
 				<div class="listings-container compact-list-layout margin-top-35">
                {%  for job in jobs %}
 					<!-- Job Listing -->
-					<a href="single-job-page.html" class="job-listing with-apply-button">
+					<a href="{% url 'accounts:view_job' job.id %}" class="job-listing with-apply-button">
 
 						<!-- Job Listing Details -->
 						<div class="job-listing-details">
@@ -96,7 +96,7 @@
 							</div>
 
 							<!-- Apply Button -->
-							<span class="list-apply-button ripple-effect">Apply Now</span>
+							<span class="list-apply-button ripple-effect">View</span>
 						</div>
 					</a>
                    {% endfor %}
