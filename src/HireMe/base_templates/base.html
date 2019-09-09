@@ -13,13 +13,12 @@
     </head>
 
     <body >
-
-        {% comment %} NAVBAR {% endcomment %}
         {% include 'nav.html' %}
         <br>
         <br>
         <br>
-
+        {% comment %} NAVBAR {% endcomment %}
+        {% include 'messages.html' %}
         {% block body %}
         {% comment %} This Block will contain the page body. {% endcomment %}
         {% endblock %}

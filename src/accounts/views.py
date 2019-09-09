@@ -4,8 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client, OrgProfile
 from django.shortcuts import get_list_or_404, get_object_or_404
-
-
+import random
 def home(request):
     all_jobs = JobApplication.objects.all()[:5]
     return render(request, 'index.html', {'title': "Home", 'jobs':all_jobs})
@@ -44,7 +43,7 @@ def login_view(request):
                 auth.login(request, user)
                 return redirect('accounts:home')
             else:
-                context = {'form': form, 'messages': ['Incorrect Username or password', ], 'title': "ERROR"}
+                context = {'form': form, 'errors': ['Incorrect Username or password', ], 'title': "ERROR"}
         else:
             context = {'form': form, 'messages': ['Invalid Form', ], 'title': "ERROR"}
     else:
@@ -105,6 +104,8 @@ def post_job(request):
     if request.method == 'POST':
         print(1)
         application = JobApplication()
+        id = create_job_id(4)
+        application.id = id
         application.org = request.user.profile_org
         application.title = request.POST.get('title')
         application.type = request.POST.get('type')
@@ -112,10 +113,32 @@ def post_job(request):
         application.salary = request.POST.get('salary')
         application.location = request.POST.get('location')
         application.descr = request.POST.get('about')
-        application.req_skills = request.POST.get('req_skills')
+        req_skills = request.POST.get('req_skills')
+        req_skills = req_skills.split(',')
+
+        for skill in req_skills:
+            application.req_skills.add(skill)
+        msg = ["Job Added, Job Id is:" + str(id)]
         application.save()
-        return redirect('accounts:dashboard')
+        return render(request,'post_job.html',context={'messages':msg})
     else:
         print(0)
         return render(request,'post_job.html')
+
+
+def create_job_id(digits):
+    lower = 10 ** (digits - 1)
+    upper = 10 ** digits - 1
+    uid = random.randint(lower, upper)
+
+    # check if Quiz already exists if not, return id
+    try:
+        job_applications = JobApplication.objects.get(job_id=uid)
+    except:
+        job_applications = None
+
+    if not job_applications:
+        return uid
+    else:
+        create_quiz_id(digits)  # If uid already exists recreate uid
 

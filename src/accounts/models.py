@@ -174,6 +174,7 @@ class JobApplication(models.Model):
         ('mis', 'Miscellaneous'),
         ('pr', 'Public Relations'),
     )
+    id = models.CharField(max_length=10,primary_key=True)
     org = models.ForeignKey(OrgProfile, on_delete=models.CASCADE, related_name='JobApplication')
     title = models.CharField(blank=False, null=False, max_length=100)
     category = models.CharField(max_length=7,choices=cat_choice,default='i')
@@ -182,7 +183,7 @@ class JobApplication(models.Model):
     descr = models.TextField(blank=False)
     location = models.CharField(blank=False, null=False, max_length=100)
     status = models.BooleanField(default=True)
-    applicants = models.ManyToManyField(UserProfile)
+    applicants = models.ManyToManyField(UserProfile,null=True,blank=True)
     req_skills = TaggableManager()
 
     class Meta:
