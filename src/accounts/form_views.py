@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Certifications, Project, Education, Client
+from .models import UserProfile, Certifications, Project, Education, Client, OrgProfile
 from .forms import UserProfileForm, EducationForm, ProjectForm, CertificationsForm
 import os
 from HireMe import settings
 from django.contrib import auth, messages
+from .decorators import normal_user_required, company_required
 
 
 @login_required(login_url='/login')
@@ -63,6 +64,7 @@ def change_basic_user_data(request):
 
 
 @login_required(login_url='/login')
+@normal_user_required
 def create_user_profile_view(request):
     if request.method == 'POST':
         try:
@@ -100,6 +102,7 @@ def create_user_profile_view(request):
 
 
 @login_required(login_url='/login')
+@normal_user_required
 def add_education_view(request):
     if request.method == 'POST':
         form = EducationForm(request.POST)
@@ -118,6 +121,7 @@ def add_education_view(request):
 
 
 @login_required(login_url='/login')
+@normal_user_required
 def add_project_view(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
@@ -136,6 +140,7 @@ def add_project_view(request):
 
 
 @login_required(login_url='/login')
+@normal_user_required
 def add_certificate_view(request):
     if request.method == 'POST':
         form = CertificationsForm(request.POST)
@@ -154,6 +159,7 @@ def add_certificate_view(request):
 
 
 @login_required(login_url='/login')
+@normal_user_required
 def edit_user_profile(request):
     profile = request.user.profile
     if profile is None:
@@ -190,3 +196,13 @@ def edit_user_profile(request):
 
         profile.save()
     return redirect('accounts:settings')
+
+
+@login_required()
+@company_required
+def create_edit_company_profile(request):
+    try:
+        get_object_or_404(OrgProfile, user=request.user)
+        pass
+    except:
+        pass

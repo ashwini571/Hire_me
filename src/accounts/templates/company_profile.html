@@ -56,21 +56,21 @@
 										<div class="col-xl-12">
 											<div class="submit-field">
 												<h5>About</h5>
-                                                <textarea type="text" class="with-border"  name="first_name">{{ user.profile_org.about }}</textarea>
+                                                <textarea type="text" class="with-border"  name="about">{{ user.profile_org.about }}</textarea>
 											</div>
 										</div>
 
 										<div class="col-xl-12">
 											<div class="submit-field">
 												<h5>Mission And Vision</h5>
-                                                <textarea type="text" class="with-border"  name="last_name"> {{ user.profile_org.mis_vis }} </textarea>
+                                                <textarea type="text" class="with-border"  name="mis_vis"> {{ user.profile_org.mis_vis }} </textarea>
 											</div>
 										</div>
 
 										<div class="col-xl-12">
 											<div class="submit-field">
 												<h5>Why choose {{ user.first_name }} ?</h5>
-                                               <textarea type="text" class="with-border"  name="last_name"> {{ user.profile_org.why }} </textarea>											</div>
+                                               <textarea type="text" class="with-border"  name="why_us"> {{ user.profile_org.why }} </textarea>											</div>
 										</div>
                                      <div class="col-xl-4">
 										<div class="submit-field">
@@ -79,7 +79,7 @@
 											<!-- AOW List -->
 											<div class="keywords-container">
 												<div class="keyword-input-container">
-													<input id="1" type="text" class="keyword-input with-border" value="{{ user.profile_org.area_of_work.all|join:',' }}" name='skills'>
+													<input id="1" type="text" class="keyword-input with-border" value="{{ user.profile_org.area_of_work.all|join:',' }}" name='fields'>
 
 												</div>
 												<div class="keywords-list">
@@ -100,7 +100,7 @@
 											<!-- AOW List -->
 											<div class="keywords-container">
 												<div class="keyword-input-container">
-													<input id="1" type="text" class="keyword-input with-border" value="{{ user.profile_org.teams}}" name='skills'>
+													<input id="1" type="text" class="keyword-input with-border" value="{{ user.profile_org.teams}}" name='teams'>
 
 												</div>
 												<div class="keywords-list">
