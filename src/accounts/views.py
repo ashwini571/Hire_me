@@ -20,7 +20,11 @@ def dashboard(request):
         jobs = JobApplication.objects.filter(org=org).values()
         return render(request, 'company_dash.html', context={'user': usr, 'jobs':jobs})
     else:
-        return render(request, 'user_dash.html')
+        edu = usr.profile.education.all()
+        pro = usr.profile.projects.all()
+        certs = usr.profile.certificates.all()
+        return render(request, 'user_dash.html', context={'title': usr.username, 'education': edu,
+                                                          'projects': pro, 'certificates': certs})
 
 
 def settings(request):

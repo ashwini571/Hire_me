@@ -15,12 +15,13 @@ urlpatterns = [
     path('edit/basic_info', form_views.change_basic_user_data, name='modify_user'),
 
 
-    # User Settings Form URLS
+    # User URLS
     path('info/create_profile', form_views.create_user_profile_view, name='create_user_profile'),
     path('info/edit_profile', form_views.edit_user_profile, name='edit_user_profile'),
     path('info/add_education', form_views.add_education_view, name='add_education'),
     path('info/add_project', form_views.add_project_view, name='add_project'),
     path('info/add_certificate', form_views.add_certificate_view, name='add_certificate'),
+    path('profile', views.dashboard, name='dashboard'),
 
     # org URLS
     path('org_profile/edit', form_views.create_edit_company_profile, name='edit_company_profile'),
