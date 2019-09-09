@@ -5,9 +5,11 @@ from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client, OrgProfile
 from django.shortcuts import get_list_or_404, get_object_or_404
 import random
+from .decorators import normal_user_required, company_required
+
 def home(request):
     all_jobs = JobApplication.objects.all()[:5]
-    return render(request, 'index.html', {'title': "Home", 'jobs':all_jobs})
+    return render(request, 'index.html', {'title': "Home", 'jobs': all_jobs})
 
 
 def dashboard(request):
@@ -16,7 +18,7 @@ def dashboard(request):
     if usr.is_organisation():
         org = get_object_or_404(OrgProfile, user=usr)
         jobs = JobApplication.objects.filter(org=org).values()
-        return render(request, 'company_dash.html', context={'user': usr,'jobs':jobs})
+        return render(request, 'company_dash.html', context={'user': usr, 'jobs':jobs})
     else:
         return render(request, 'user_dash.html')
 
@@ -57,6 +59,7 @@ def logout_view(request):
         return redirect('accounts:home')
 
 
+@company_required
 def get_org_profile(request, id):
     org = OrgProfile.objects.get(user = Client.objects.get(username=id))
     if request.user.username == id:
@@ -89,7 +92,10 @@ def registration_view(request):
 
             usr = auth.authenticate(username=username, password=password)
             auth.login(request, usr)
-            return redirect('accounts:create_user_profile')
+            if usr.is_organisation():
+                return redirect('accounts:settings')
+            else:
+                return redirect('accounts:create_user_profile')
 
         else:
             print('errors')
@@ -99,7 +105,8 @@ def registration_view(request):
         return render(request, 'reg_form.html', context={'title': 'Sign Up', 'form': form})
 
 
-@login_required()
+@login_required
+@company_required
 def post_job(request):
     if request.method == 'POST':
         print(1)
@@ -123,7 +130,7 @@ def post_job(request):
         return render(request,'post_job.html',context={'messages':msg})
     else:
         print(0)
-        return render(request,'post_job.html')
+        return render(request, 'post_job.html')
 
 
 def create_job_id(digits):
