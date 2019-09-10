@@ -18,14 +18,14 @@
 				<nav id="navigation">
 					<ul id="responsive">
 
-						<li><a href="#">Home</a></li>
+						<li><a href="{% url 'accounts:home' %}">Home</a></li>
 
 						<li><a href="#">Find Work</a></li>
 
 						<li><a href="#">For Employers</a></li>
-
+                       {% if user.is_authenticated %}
 						<li><a href="{% url 'accounts:dashboard' %}" class="current">Dashboard</a></li>
-
+                        {% endif %}
 						<li><a href="#">Pages</a></li>
 
 					</ul>
