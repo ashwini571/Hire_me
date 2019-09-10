@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views, form_views
+from django.conf.urls import url
 
 app_name = 'accounts'
 
@@ -22,6 +23,11 @@ urlpatterns = [
     path('info/add_project', form_views.add_project_view, name='add_project'),
     path('info/add_certificate', form_views.add_certificate_view, name='add_certificate'),
     path('profile', views.dashboard, name='dashboard'),
+
+    # Urls for persons dashboard
+    url(r'^accounts/follow/$', views.user_follow, name='user_follow'),
+    url(r'^accounts/$', views.user_list, name='user_list'),
+    url(r'^accounts/(?P<username>[-\w]+)/$', views.user_detail, name='user_detail'),
 
     # org URLS
     path('org_profile/edit', form_views.create_edit_company_profile, name='edit_company_profile'),

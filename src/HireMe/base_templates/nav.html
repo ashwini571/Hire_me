@@ -20,6 +20,9 @@
 
 						<li><a href="{% url 'accounts:home' %}">Home</a></li>
 
+                        <li {% if section == "people" %}class="selected"{% endif %}><a
+                        href="{% url 'accounts:user_list' %}">People</a></li>
+
 						<li><a href="#">Find Work</a></li>
 
 						<li><a href="#">For Employers</a></li>

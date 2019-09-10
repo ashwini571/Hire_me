@@ -2,10 +2,25 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, ClientRegistrationForm
-from .models import JobApplication, Client, OrgProfile
+from .models import JobApplication, Client, OrgProfile, Contact
 from django.shortcuts import get_list_or_404, get_object_or_404
 import random
 from .decorators import normal_user_required, company_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.http import HttpResponseBadRequest
+
+
+def ajax_required(f):
+    def wrap(request, *args, **kwargs):
+        if not request.is_ajax():
+            return HttpResponseBadRequest()
+        return f(request, *args, **kwargs)
+
+    wrap.__doc__=f.__doc__
+    wrap.__name__=f.__name__
+    return wrap
+
 
 def home(request):
     all_jobs = JobApplication.objects.all()[:5]
@@ -70,7 +85,7 @@ def get_org_profile(request, id):
         context = {'add_job': 1, 'org_profile': org}
     else:
         context = {'org_profile': org}
-    return render(request, 'company_profile', context=context)
+    return render(request, 'company_profile.html', context=context)
 
 
 def registration_view(request):
@@ -169,5 +184,35 @@ def view_job(request, id):
         return render(request, 'view_single_job.html', context={'job': job, 'user': user,'application':application})
 
 
+# Dashboard of person to which user wants to follow or unfollow
+@login_required
+def user_detail(request, username):
+    user = get_object_or_404(Client, username=username, is_active=True)
+    return render(request, 'detail.html', {'section': 'people', 'user':user})
 
 
+# List of recommended users
+@login_required
+def user_list(request):
+    users = Client.objects.filter(is_active=True)
+    return render(request, 'list.html', {'section': 'people', 'users': users})
+
+
+# Follow Function
+@ajax_required
+@require_POST
+@login_required
+def user_follow(request):
+    user_id = request.POST.get('id')
+    action = request.POST.get('action')
+    if user_id and action:
+        try:
+            user = Client.objects.get(id=user_id)
+            if action == 'follow':
+                Contact.objects.get_or_create(user_from=request.user, user_to=user)
+            else:
+                Contact.objects.filter(user_from=request.user, user_to=user).delete()
+            return JsonResponse({'status': 'ok'})
+        except Client.DoesNotExist:
+            return JsonResponse({'status': 'ko'})
+    return JsonResponse({'status': 'ko'})

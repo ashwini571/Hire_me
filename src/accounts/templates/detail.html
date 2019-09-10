@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}{{ user.get_absolute_url }}{% endblock %}
+{% block body %}
+ <h1>{{ user.get_full_name }}</h1>
+ {% with total_followers=user.followers.count %}
+ <span class="count">
+ <span class="total">{{ total_followers }}</span>
+ follower{{ total_followers|pluralize }}
+ </span>
+     <!-- Follow Button -->
+ <a href="#" data-id="{{ user.id }}"
+    data-action="{% if request.user in user.followers.all %}un{% endif %}follow" class="follow button">
+ {% if request.user not in user.followers.all %}
+ Follow
+ {% else %}
+ Unfollow
+ {% endif %}
+ </a>
+ {% endwith %}
+{% endblock %}
+
+<!-- Ajax for follow button -->
+{% block domready %}
+    function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+    $('a.follow').click(function(e){
+        e.preventDefault();
+    $.post('{% url 'accounts:user_follow' %}',
+    {
+        id: $(this).data('id'),
+        action: $(this).data('action')
+    },
+    function(data){
+        if (data['status'] == 'ok') {
+            var previous_action = $('a.follow').data('action');
+
+        // toggle data-action
+        $('a.follow').data('action',
+        previous_action == 'follow' ? 'unfollow' : 'follow');
+        // toggle link text
+        $('a.follow').text(
+        previous_action == 'follow' ? 'Unfollow' : 'Follow');
+
+        // update total followers
+        var previous_followers = parseInt(
+        $('span.count .total').text());
+        $('span.count .total').text(previous_action == 'follow' ?
+        previous_followers + 1 : previous_followers - 1);
+    }
+ }
+ );
+ });
+{% endblock %}

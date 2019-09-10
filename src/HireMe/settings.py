@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -48,6 +49,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Custom User model
 AUTH_USER_MODEL = 'accounts.Client'
+
+# Using this for getting absolute url of person
+ABSOLUTE_URL_OVERRIDES = {
+ 'accounts.Client': lambda u: reverse_lazy('user_detail',
+ args=[u.username])
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
 from taggit.managers import TaggableManager
 from django.utils.timezone import now
+from django.urls import reverse
 # from location_field.models.spatial import LocationField
 
 
@@ -45,12 +46,36 @@ class Client(AbstractUser):
     def is_organisation(self):
         return self.type == 'org'
 
+    # Utility Function for going to persons dashboard
+    def get_absolute_url(self):
+        return reverse('accounts:user_detail',
+                       kwargs={'username': self.username})
+
     class Meta:
         verbose_name = 'Client'
         verbose_name_plural = 'Clients'
         base_manager_name = 'objects'
         default_manager_name = 'objects'
         db_table = 'clients'
+
+
+# Acts as a by pass model for connecting follower and following person
+class Contact(models.Model):
+    user_from = models.ForeignKey(Client, related_name='rel_from_set', on_delete=models.CASCADE)
+    user_to = models.ForeignKey(Client, related_name='rel_to_set', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __str__(self):
+        return '{} follows {}'.format(self.user_from,self.user_to)
+
+
+# Connecting Followers and user
+following = models.ManyToManyField('self', through=Contact, related_name='followers', symmetrical=False)
+Client.add_to_class('following',
+                      models.ManyToManyField('self', through=Contact, related_name='followers', symmetrical=False))
 
 
 class UserProfile(models.Model):

@@ -30,6 +30,15 @@
             {% comment %} Use this block to load custom JavaScript for each of the pages {% endcomment %}
         {% endblock %}
 
+        {% comment %} Ajax for Follow Or Unfollow {% endcomment %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script>
+         $(document).ready(function(){
+         {% block domready %}
+         {% endblock %}
+         });
+        </script>
+
 
     </body>
 
