@@ -221,9 +221,9 @@ class JobApplication(models.Model):
 
 
 class AppliedJobs(models.Model):
-    job = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='applied_job')
-    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='applied_user')
+    job = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='applied_job')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='applied_user')
     response = models.TextField(blank=True)
     date_applied = models.DateTimeField(default=now)
-    date_responded = models.DateTimeField()
+    date_responded = models.DateTimeField(blank=True)
     status = models.BooleanField(default=False)
