@@ -1,9 +1,10 @@
 # HireMe
 
-###About
+## About
 Linked in Clone (kind of)
 
-### Technology
+
+## Technology
 - Django
 - Bootstrap
 - MachineLearning
