@@ -2,6 +2,11 @@ from django.contrib import admin
 from .models import Client, Project, UserProfile, Certifications, Education, JobApplication, OrgProfile, AppliedJobs
 
 
+class FollowingInline(admin.TabularInline):
+    model = Client.following.through
+    fk_name = "user_from"
+
+
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name', 'email', 'type')
     list_filter = ('type',)
@@ -11,6 +16,7 @@ class UserAdmin(admin.ModelAdmin):
         ('Info', {'fields': ('first_name', 'last_name', 'profile_image')}),
         ('User Type', {'fields': ('type',)}),
     )
+    inlines = (FollowingInline,)
     ordering = ('username', 'email', 'first_name', 'last_name')
     filter_horizontal = ()
 
