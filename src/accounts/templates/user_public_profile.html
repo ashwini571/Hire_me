@@ -12,10 +12,12 @@
 							<h3>{{ u.first_name }} {{ u.last_name }}<span>{{ u.profile.skills.all.0 }} Expert + {{ u.profile.skills.all.2 }} Dev</span></h3>
                             <ul>
                                 {% with total_followers=u.followers.count %}
-                                 <li><span class="count">
-                                 <span class="total">{{ total_followers }}</span>
-                                 follower{{ total_followers|pluralize }}
-                                 </span></li>
+                                    <li><div class="verified-badge-with-title">
+                                        <span class="count">
+                                     <span class="total">{{ total_followers }}</span>
+                                     Follower{{ total_followers|pluralize }}
+                                     </span>
+                                    </div></li>
                                      <!-- Follow Button --><br>
 
                                     <a href="#" data-id="{{ u.id }}"

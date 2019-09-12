@@ -316,3 +316,4 @@ $RECYCLE.BIN/
 src/assets/
 src/media
 src/accounts/migrations
+src/feed/migrations

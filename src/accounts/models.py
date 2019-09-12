@@ -48,8 +48,10 @@ class Client(AbstractUser):
 
     # Utility Function for going to persons dashboard
     def get_absolute_url(self):
-        return reverse('accounts:user_detail',
-                       kwargs={'username': self.username})
+        if self.type == 'user':
+            return reverse('accounts:public_profile', kwargs={'username': self.username})
+        else:
+            pass
 
     class Meta:
         verbose_name = 'Client'
