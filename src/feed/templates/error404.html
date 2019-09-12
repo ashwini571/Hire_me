@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<div id="titlebar" class="gradient">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2>&nbsp;</h2>
+
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs" class="dark">
+					<ul>
+						<li><a href="{% url 'accounts:home' %}">Home</a></li>
+						<li>404 Not Found</li>
+					</ul>
+				</nav>
+                <br><br><br>
+			</div>
+		</div>
+	</div>
+    <div class="container">
+        <img src="{% static 'images/404.png' %}" class="img-thumbnail img-fluid offset-2">
+        <div class="m-3 offset-2 p-3">
+            <br><br><br><br>
+        <h1 style="font-weight: bolder; font-size: 75px;" class="offset-2">&nbsp;&nbsp;&nbsp;&nbsp;Page Not Found</h1>
+        </div>
+    </div>
+</div>
+    <br><br><br>
+{% include 'footer.html' %}
+{% endblock %}

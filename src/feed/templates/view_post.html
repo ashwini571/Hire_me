@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div id="titlebar" class="gradient">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+                <h2>&nbsp;</h2>
+
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs" class="dark">
+					<ul>
+						<li><a href="{% url 'accounts:home' %}">Home</a></li>
+						<li>Blog</li>
+					</ul>
+				</nav>
+
+			</div>
+            <br>
+            <div class="col-md-12">
+                <h1>{{ post.title }} - <a href="{{ user.get_absolute_url }}">{{ post.author.first_name }} {{ post.author.last_name }}</a></h1>
+            </div>
+		</div>
+	</div>
+</div>
+    <div class="container">
+        <img src="{{ post.image.url }}" class="img-fluid img-thumbnail"><br><br><br>
+        <div><i class="icon-material-outline-date-range"></i> Created - {{ post.created_on }}</div><br>
+        <div><i class="icon-material-outline-date-range"></i> Updated - {{ post.updated_on_on }}</div><br><br>
+        <p>{{ post.content|linebreaks }}</p>
+    </div>
+
+    <br><br><br>
+
+    {% include 'footer.html' %}
+{% endblock %}
