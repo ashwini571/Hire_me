@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client, OrgProfile, Contact ,AppliedJobs
@@ -259,3 +260,19 @@ def user_follow(request):
         except Client.DoesNotExist:
             return JsonResponse({'status': 'ko'})
     return JsonResponse({'status': 'ko'})
+
+
+@login_required(login_url='/login')
+@company_required
+def manage_candidates(request, job_id):
+    job = JobApplication.objects.filter(id=job_id)
+    applications = AppliedJobs.objects.filter(job__in=job).annotate(no = Count('user'))
+
+    return render(request, 'manage_candidates.html', context={'job':job, 'applications':applications})
+
+
+@login_required(login_url='/login')
+@company_required
+def manage_jobs(request):
+    jobs = JobApplication.objects.filter(org=request.user.profile_org)
+    return render(request, 'manage_jobs.html', context={'jobs':jobs})

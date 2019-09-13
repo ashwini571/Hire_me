@@ -32,6 +32,8 @@ urlpatterns = [
 
     # org URLS
     path('org_profile/edit', form_views.create_edit_company_profile, name='edit_company_profile'),
+    path('manage_jobs', views.manage_jobs, name='manage_jobs'),
+    path('manage_candidates/<slug:job_id>', views.manage_candidates, name='manage_candidates'),
     path('org_profile/<slug:id>', views.get_org_profile, name='get_org_profile'),
     path('post_job', views.post_job, name='post_job'),
     path('view_job/<slug:id>', views.view_job, name='view_job' )

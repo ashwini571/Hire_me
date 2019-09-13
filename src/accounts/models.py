@@ -211,7 +211,7 @@ class JobApplication(models.Model):
     descr = models.TextField(blank=False)
     location = models.CharField(blank=False, null=False, max_length=100)
     status = models.BooleanField(default=True)
-    applicants = models.ManyToManyField(UserProfile,blank=True)
+    applicants = models.ForeignKey(UserProfile,on_delete=models.CASCADE,blank=True)
     req_skills = TaggableManager()
 
     class Meta:

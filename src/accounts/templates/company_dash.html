@@ -57,7 +57,7 @@
 
                  </div>
                 <br>
-                <p>{{ user.profile_org.about }}</p>
+                <p >{{ user.profile_org.about }}</p>
 
 			</div>
 
@@ -77,51 +77,12 @@
                 <p>{{ user.profile_org.why }}</p>
 
 			</div>
-			<!-- Boxed List -->
-			<div class="boxed-list margin-bottom-60">
-				<div class="boxed-list-headline">
-					<h3><i class="icon-material-outline-business-center"></i> Open Positions</h3>
-				</div>
 
-				<div class="listings-container compact-list-layout">
+            <div class="boxed-list margin-bottom-60">
 
-					{%  for job in jobs %}
-					<!-- Job Listing -->
-					<a href="single-job-page.html" class="job-listing with-apply-button">
+		<a href="{% url 'accounts:manage_jobs' %}" class="button dark big ripple-effect button-sliding-icon">Manage Jobs <i class="icon-feather-arrow-right"></i></a>
 
-						<!-- Job Listing Details -->
-						<div class="job-listing-details">
-
-							<!-- Logo -->
-							<div class="job-listing-company-logo">
-								<img src="{% static 'images/company-logo-05.png'  %}" alt="">
-							</div>
-
-							<!-- Details -->
-							<div class="job-listing-description">
-								<h3 class="job-listing-title">{{ job.title }}</h3>
-
-								<!-- Job Listing Footer -->
-								<div class="job-listing-footer">
-									<ul>
-										<li><i class="icon-material-outline-business"></i> {{ job.org.user.first_name }} <div class="verified-badge" title="Verified Employer" data-tippy-placement="top"></div></li>
-										<li><i class="icon-material-outline-location-on"></i> {{ job.location }}</li>
-										<li><i class="icon-material-outline-business-center"></i> {{ job.get_type_display }}</li>
-
-									</ul>
-								</div>
-							</div>
-
-							<!-- Apply Button -->
-							<span class="list-apply-button ripple-effect">Manage</span>
-						</div>
-					</a>
-                   {% endfor %}
-
-				</div>
-
-			</div>
-			<!-- Boxed List / End -->
+            </div>
 
 {#			<!-- Boxed List -->#}
 {#			<div class="boxed-list margin-bottom-60">#}
@@ -230,11 +191,6 @@
     </div>
 
     <div class="row">
-				<div class="col-xl-12">
-					<a href="{%  url 'accounts:post_job' %}" class="button ripple-effect big margin-top-30"><i class="icon-feather-plus"></i> Post a Job</a>
-				</div>
-
-
 
     </div>
 </div>
