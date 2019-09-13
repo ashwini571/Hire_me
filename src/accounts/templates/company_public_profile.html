@@ -1,0 +1,265 @@
+{%  extends 'base.html' %}
+{%  load static %}
+
+{% block body %}
+
+
+
+
+<!-- Titlebar
+================================================== -->
+<div class="single-page-header" data-background-image="">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="single-page-header-inner">
+					<div class="left-side">
+						<div class="header-image"><img src="{{ user.image_url }}" alt=""></div>
+						<div class="header-details">
+							<h3>{{ user.first_name }} <span></span></h3>
+							<ul>
+								<li><div class="star-rating" data-rating="4.8"></div></li>
+
+                         {% if user.profile_org.verification %}
+								<li><div class="verified-badge-with-title">Verified</div></li>
+                          {% endif %}
+
+                                {% with total_followers=u.followers.count %}
+                                    <li><div class="verified-badge-with-title">
+                                        <span class="count">
+                                     <span class="total">{{ total_followers }}</span>
+                                     Follower{{ total_followers|pluralize }}
+                                     </span>
+                                    </div></li>
+                                     <!-- Follow Button --><br>
+
+                                    <a href="#" data-id="{{ u.id }}"
+                                    data-action="{% if request.user in u.followers.all %}un{% endif %}follow" class="follow button button-sliding-icon ripple-effect">
+                                 {% if request.user not in u.followers.all %}
+                                     Follow <i class="icon-material-outline-add-circle-outline"></i>
+                                 {% else %}
+                                     Unfollow <i class="icon-material-outline-delete"></i>
+                                 {% endif %}
+                                 </a>
+                                {% endwith %}
+
+							</ul>
+						</div>
+					</div>
+{#					<div class="right-side">#}
+{#						<!-- Breadcrumbs -->#}
+{#						<nav id="breadcrumbs" class="white">#}
+{#							<ul>#}
+{#								<li><a href="#">Home</a></li>#}
+{#								<li><a href="#">Browse Companies</a></li>#}
+{#								<li>Acodia</li>#}
+{#							</ul>#}
+{#						</nav>#}
+{#					</div>#}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Page Content
+================================================== -->
+<div class="container">
+	<div class="row">
+
+		<!-- Content -->
+		<div class="col-xl-8 col-lg-8 content-right-offset">
+
+			<div class=" boxed-list margin-bottom-60">
+                <div class="boxed-list-headline">
+				<h3 class=""><b>About Company</b></h3>
+
+                 </div>
+                <br>
+                <p>{{ user.profile_org.about }}</p>
+
+			</div>
+
+			<div class=" boxed-list margin-bottom-60">
+                <div class="boxed-list-headline">
+				<h3 class=""><b>Mission And Vision</b></h3>
+                 </div>
+                <br>
+                <p>{{ user.profile_org.mis_vis }}</p>
+
+			</div>
+ 			<div class=" boxed-list margin-bottom-60">
+                <div class="boxed-list-headline">
+				<h3 class=""><b>Why {{ user.first_name }} ?</b></h3>
+                 </div>
+                <br>
+                <p>{{ user.profile_org.why }}</p>
+
+			</div>
+			<!-- Boxed List -->
+			<div class="boxed-list margin-bottom-60">
+				<div class="boxed-list-headline">
+					<h3><i class="icon-material-outline-business-center"></i> Open Positions</h3>
+				</div>
+
+				<div class="listings-container compact-list-layout">
+
+					{%  for job in jobs %}
+					<!-- Job Listing -->
+					<a href="single-job-page.html" class="job-listing with-apply-button">
+
+						<!-- Job Listing Details -->
+						<div class="job-listing-details">
+
+							<!-- Logo -->
+							<div class="job-listing-company-logo">
+								<img src="{% static 'images/company-logo-05.png'  %}" alt="">
+							</div>
+
+							<!-- Details -->
+							<div class="job-listing-description">
+								<h3 class="job-listing-title">{{ job.title }}</h3>
+
+								<!-- Job Listing Footer -->
+								<div class="job-listing-footer">
+									<ul>
+										<li><i class="icon-material-outline-business"></i> {{ job.org.user.first_name }} <div class="verified-badge" title="Verified Employer" data-tippy-placement="top"></div></li>
+										<li><i class="icon-material-outline-location-on"></i> {{ job.location }}</li>
+										<li><i class="icon-material-outline-business-center"></i> {{ job.get_type_display }}</li>
+
+									</ul>
+								</div>
+							</div>
+
+							<!-- Apply Button -->
+							<span class="list-apply-button ripple-effect">Manage</span>
+						</div>
+					</a>
+                   {% endfor %}
+
+				</div>
+
+			</div>
+			<!-- Boxed List / End -->
+
+{#			<!-- Boxed List -->#}
+{#			<div class="boxed-list margin-bottom-60">#}
+{#				<div class="boxed-list-headline">#}
+{#					<h3><i class="icon-material-outline-thumb-up"></i> Reviews</h3>#}
+{#				</div>#}
+{#				<ul class="boxed-list-ul">#}
+{#					<li>#}
+{#						<div class="boxed-list-item">#}
+{#							<!-- Content -->#}
+{#							<div class="item-content">#}
+{#								<h4>Doing things the right way <span>Anonymous Employee</span></h4>#}
+{#								<div class="item-details margin-top-10">#}
+{#									<div class="star-rating" data-rating="5.0"></div>#}
+{#									<div class="detail-item"><i class="icon-material-outline-date-range"></i> August 2019</div>#}
+{#								</div>#}
+{#								<div class="item-description">#}
+{#									<p>Great company and especially ideal for the career-minded individual. The company is large enough to offer a variety of jobs in all kinds of interesting locations. Even if you never change roles, your job changes and evolves as the company grows, keeping things fresh.</p>#}
+{#								</div>#}
+{#							</div>#}
+{#						</div>#}
+{#					</li>#}
+{#					<li>#}
+{#						<div class="boxed-list-item">#}
+{#							<!-- Content -->#}
+{#							<div class="item-content">#}
+{#								<h4>Outstanding Work Environment <span>Anonymous Employee</span></h4>#}
+{#								<div class="item-details margin-top-10">#}
+{#									<div class="star-rating" data-rating="5.0"></div>#}
+{#									<div class="detail-item"><i class="icon-material-outline-date-range"></i> May 2019</div>#}
+{#								</div>#}
+{#								<div class="item-description">#}
+{#									<p>They do business with integrity and rational thinking. Overall, it's an excellent place to work, with products that are winning in the marketplace.</p>#}
+{#								</div>#}
+{#							</div>#}
+{#						</div>#}
+{#					</li>#}
+{#				</ul>#}
+{##}
+{#				<div class="centered-button margin-top-35">#}
+{#					<a href="#small-dialog" class="popup-with-zoom-anim button button-sliding-icon">Leave a Review <i class="icon-material-outline-arrow-right-alt"></i></a>#}
+{#				</div>#}
+{##}
+{#			</div>#}
+{#			<!-- Boxed List / End -->#}
+{##}
+		</div>
+
+
+		<!-- Sidebar -->
+		<div class="col-xl-4 col-lg-4">
+			<div class="sidebar-container">
+
+				<!-- Location -->
+
+				<div class="sidebar-widget row">
+                    <h3>Location</h3>
+						<div class ="freelancer-socials margin-top-40" id="streetView">
+						<a href="#" >{{ user.profile_org.location }}</a>
+                         </div>
+                                       <div class="clearfix"></div>
+				</div>
+
+
+
+				<!-- Widget -->
+				<div class="sidebar-widget row">
+					<h3>Area of Work</h3>
+				    <div class="freelancer-socials margin-top-25">
+                        <div class="keywords-list">
+                           {% for aow in user.profile_org.area_of_work.all %}
+                            <span class="keyword"><span class="keyword-text"></span><span class="keyword-text">{{ aow }}</span></span>
+                            {% endfor %}
+                        </div>
+					</div>
+                                   <div class="clearfix"></div>
+				</div>
+				<!-- Widget -->
+				<div class="sidebar-widget row">
+					<h3>Our Team</h3>
+				    <div class="freelancer-socials margin-top-25">
+                        <div class="keywords-list">
+                           {% for team in user.profile_org.teams_as_list %}
+                               <span class="keyword"><span class="keyword-text"></span><span class="keyword-text">{{ team }}</span></span>
+                           {% endfor %}
+                        </div>
+					</div>
+                    <div class="clearfix"></div>
+				</div>
+            <!--Widget -->
+                <div class="sidebar-widget row">
+					<h3>Social Profiles</h3>
+					<div class="freelancer-socials margin-top-40">
+						<ul>
+							<li><a href="#" title="Dribbble" data-tippy-placement="top"><i class="icon-brand-dribbble"></i></a></li>
+							<li><a href="#" title="Twitter" data-tippy-placement="top"><i class="icon-brand-twitter"></i></a></li>
+							<li><a href="#" title="Behance" data-tippy-placement="top"><i class="icon-brand-behance"></i></a></li>
+							<li><a href="#" title="GitHub" data-tippy-placement="top"><i class="icon-brand-github"></i></a></li>
+
+						</ul>
+					</div>
+				</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+    </div>
+</div>
+
+
+<!-- Spacer -->
+<div class="margin-top-15"></div>
+<!-- Spacer / End-->
+{% include 'footer.html' %}
+{% endblock %}
+
+{% block domready %}
+    {% include 'follower_javascript.html'%}
+{% endblock %}

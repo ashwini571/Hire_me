@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
 from django.utils.timezone import now
 
+
 def ajax_required(f):
     def wrap(request, *args, **kwargs):
         if not request.is_ajax():
@@ -158,10 +159,20 @@ def post_job(request):
 def view_profile(request, username):
     try:
         u = get_object_or_404(Client, username=username)
-        edu = u.profile.education.all()
-        pro = u.profile.projects.all()
-        certs = u.profile.certificates.all()
-        return render(request, 'user_public_profile.html', context={'title': u.username, 'u': u, 'education': edu,
+        if u.is_individual():
+            edu = u.profile.education.all()
+            pro = u.profile.projects.all()
+            certs = u.profile.certificates.all()
+            print(username)
+        else:
+            jobs = JobApplication.objects.filter(org=u.profile_org).values()
+        # if user search for himself , is redirected to his dashboard
+        if username==request.user.username:
+            return redirect('accounts:dashboard')
+        elif u.is_organisation():
+            return render(request, 'company_public_profile.html', context={'title': u.username, 'user': u, 'jobs': jobs})
+        else:
+            return render(request, 'user_public_profile.html', context={'title': u.username, 'u': u, 'education': edu,
                       'projects': pro, 'certificates': certs})
     except:
         return HttpResponse("No Such user exists")
