@@ -2,12 +2,24 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, ClientRegistrationForm
-from .models import JobApplication, Client, OrgProfile, Contact, AppliedJobs
+from .models import JobApplication, Client, OrgProfile, Contact ,AppliedJobs
 from django.shortcuts import get_list_or_404, get_object_or_404
 import random
 from .decorators import normal_user_required, company_required, ajax_required
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
+from django.http import HttpResponseBadRequest
+from django.utils.timezone import now
+
+def ajax_required(f):
+    def wrap(request, *args, **kwargs):
+        if not request.is_ajax():
+            return HttpResponseBadRequest()
+        return f(request, *args, **kwargs)
+
+    wrap.__doc__=f.__doc__
+    wrap.__name__=f.__name__
+    return wrap
 
 
 def home(request):
@@ -173,19 +185,36 @@ def create_job_id(digits):
 
 
 def view_job(request, id):
+
     user = request.user
     job = JobApplication.objects.get(id=id)
-    try:
-        application = AppliedJobs.objects.filter(id=id).filter(user=user)
-    except:
-        application = None
-    print(application)
+    if request.method == 'POST':
+        new_app = AppliedJobs()
+        new_app.job = job
+        new_app.user = user.profile
+        new_app.date_responded = now()
+        new_app.save()
 
-    if request.user.is_organisation():
-        return render(request, 'view_single_job.html', context={'job': job, 'user': user})
+        return render(request,'view_single_job.html',context={'job':job, 'user': user, 'application':new_app})
     else:
-        return render(request, 'view_single_job.html', context={'job': job, 'user': user, 'application': application})
+        try:
+            application = AppliedJobs.objects.filter(job=job).filter(user=user.profile)
+        except:
+            application = None
 
+        if application:
+            application = application[0]
+
+        if request.user.is_authenticated:
+            if user.is_organisation():
+                print(1)
+                return render(request, 'view_single_job.html', context={'job': job, 'user': user})
+            else:
+                print(9)
+                return render(request, 'view_single_job.html', context={'job': job, 'user': user,'application':application})
+        else:
+            error = ["You must login first!"]
+            return render(request, 'login.html', context={'errors': error})
 
 # Dashboard of person to which user wants to follow or unfollow
 # @login_required

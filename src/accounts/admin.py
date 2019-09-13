@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, Project, UserProfile, Certifications, Education, JobApplication, OrgProfile, AppliedJobs
+from .models import Client, Project, UserProfile, Certifications, Education, JobApplication, OrgProfile, AppliedJobs , Contact
 
 
 class FollowingInline(admin.TabularInline):
@@ -87,4 +87,4 @@ admin.site.register(Certifications, CertificationAdmin)
 admin.site.register(OrgProfile, OrgProfileAdmin)
 admin.site.register(JobApplication, JobApplicationAdmin)
 admin.site.register(AppliedJobs, AppliedJobadmin)
-
+admin.site.register(Contact)
