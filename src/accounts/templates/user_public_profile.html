@@ -4,23 +4,37 @@
 <div class="single-page-header freelancer-header" data-background-image="images/single-freelancer.jpg">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-9">
+			<div class="col-md-12">
 				<div class="single-page-header-inner">
 					<div class="left-side">
-						<div class="header-image freelancer-avatar"><img src="{{ user.image_url }}" alt=""></div>
+						<div class="header-image freelancer-avatar"><img src="{{ u.image_url }}" alt=""></div>
 						<div class="header-details">
-							<h3>{{ user.first_name }} {{ user.last_name }}<span>{{ user.profile.skills.all.0 }} Expert + {{ user.profile.skills.all.2 }} Dev</span></h3>
-							<ul>
-								<li><div class="verified-badge-with-title">{{ user.followers.count }} Follower{{ user.followers.count|pluralize }}</div></li>
+							<h3>{{ u.first_name }} {{ u.last_name }}<span>{{ u.profile.skills.all.0 }} Expert + {{ u.profile.skills.all.2 }} Dev</span></h3>
+                            <ul>
+                                {% with total_followers=u.followers.count %}
+                                    <li><div class="verified-badge-with-title">
+                                        <span class="count">
+                                     <span class="total">{{ total_followers }}</span>
+                                     Follower{{ total_followers|pluralize }}
+                                     </span>
+                                    </div></li>
+                                     <!-- Follow Button --><br>
+
+                                    <a href="#" data-id="{{ u.id }}"
+                                    data-action="{% if request.user in u.followers.all %}un{% endif %}follow" class="follow button button-sliding-icon ripple-effect">
+                                 {% if request.user not in u.followers.all %}
+                                     Follow <i class="icon-material-outline-add-circle-outline"></i>
+                                 {% else %}
+                                     Unfollow <i class="icon-material-outline-delete"></i>
+                                 {% endif %}
+                                 </a>
+                                {% endwith %}
 							</ul>
+							<br>
 						</div>
 					</div>
 				</div>
 			</div>
-            <div class="col-3">
-                <a class="button button-sliding-icon" href="{% url 'feeds:add_image_post'%}">Add Image <i class="icon-material-outline-add-a-photo"></i></a> <br>
-                <a class="button button-sliding-icon" href="{% url 'feeds:create_post'%}">Blog Post <i class="icon-material-outline-add"></i></a> <br>
-            </div>
 		</div>
 	</div>
 </div>
@@ -37,14 +51,13 @@
 			<!-- Page Content -->
 			<div class="single-page-section">
 				<h3 class="margin-bottom-25">About Me</h3>
-                <p>{{ user.profile.about|linebreaks }}</p>
+                <p>{{ u.profile.about|linebreaks }}</p>
 			</div>
 
 			<!-- Boxed List -->
 			<div class="boxed-list margin-bottom-60">
 				<div class="boxed-list-headline row">
 					<h3 class="col-11"><i class="icon-material-outline-thumb-up"></i> Education </h3>
-                    <a href="{% url 'accounts:add_education' %}" class="button waves-button col-1"><i class="icon-material-outline-add-circle-outline"></i></a>
 				</div>
 
                 {% if education %}
@@ -77,7 +90,6 @@
 			<div class="boxed-list margin-bottom-60">
 				<div class="boxed-list-headline row">
 					<h3 class="col-11"><i class="icon-material-outline-business"></i> Projects </h3>
-                    <a href="{% url 'accounts:add_project' %}" class="button waves-button col-1"><i class="icon-material-outline-add-circle-outline"></i></a>
 				</div>
 				<ul class="boxed-list-ul">
                 {% if projects %}
@@ -108,7 +120,6 @@
             <div class="boxed-list margin-bottom-60">
 				<div class="boxed-list-headline row">
 					<h3 class="col-11"><i class="icon-material-outline-thumb-up"></i> Certifications </h3>
-                    <a href="{% url 'accounts:add_certificate' %}" class="button waves-button col-1"><i class="icon-material-outline-add-circle-outline"></i></a>
 				</div>
 
                 {% if certificates %}
@@ -164,7 +175,7 @@
 				<div class="sidebar-widget">
 					<h3>Skills</h3>
 					<div class="task-tags">
-						{% for skill in user.profile.skills.all %}
+						{% for skill in u.profile.skills.all %}
                         <span>{{ skill }}</span>
                         {% endfor %}
 					</div>
@@ -174,7 +185,7 @@
 				<div class="sidebar-widget">
 					<h3>Resume</h3>
 					<div class="attachments-container">
-						<a href="{{ user.profile.resume.url }}" class="attachment-box ripple-effect"><span>Resume</span><i>PDF</i></a>
+						<a href="{{ u.profile.resume.url }}" class="attachment-box ripple-effect"><span>Resume</span><i>PDF</i></a>
 					</div>
 				</div>
 
@@ -208,6 +219,10 @@
 <!-- Spacer / End-->
 
 {% include 'footer.html' %}
+{% endblock %}
+
+{% block domready %}
+    {% include 'follower_javascript.html'%}
 {% endblock %}
 
 

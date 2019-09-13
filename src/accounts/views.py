@@ -5,8 +5,8 @@ from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client, OrgProfile, Contact ,AppliedJobs
 from django.shortcuts import get_list_or_404, get_object_or_404
 import random
-from .decorators import normal_user_required, company_required
-from django.http import JsonResponse
+from .decorators import normal_user_required, company_required, ajax_required
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
 from django.utils.timezone import now
@@ -27,6 +27,7 @@ def home(request):
     return render(request, 'index.html', {'title': "Home", 'jobs': all_jobs})
 
 
+@login_required(login_url='/login')
 def dashboard(request):
     usr = request.user
 
@@ -42,6 +43,7 @@ def dashboard(request):
                                                           'projects': pro, 'certificates': certs})
 
 
+@login_required(login_url='/login')
 def settings(request):
     usr = request.user
     if usr.is_organisation():
@@ -54,7 +56,6 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect('accounts:home')
     if request.method == 'POST':
-        print("hola")
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -72,12 +73,13 @@ def login_view(request):
     return render(request, 'login.html', context=context)
 
 
-@login_required
+@login_required(login_url='/login')
 def logout_view(request):
         auth.logout(request)
         return redirect('accounts:home')
 
 
+@login_required(login_url='/login')
 @company_required
 def get_org_profile(request, id):
     org = OrgProfile.objects.get(user = Client.objects.get(username=id))
@@ -146,10 +148,23 @@ def post_job(request):
             application.req_skills.add(skill)
         msg = ["Job Added, Job Id is:" + str(id)]
         application.save()
-        return render(request,'post_job.html',context={'messages':msg})
+        return render(request, 'post_job.html', context={'messages': msg})
     else:
         print(0)
         return render(request, 'post_job.html')
+
+
+@login_required(login_url='/login')
+def view_profile(request, username):
+    try:
+        u = get_object_or_404(Client, username=username)
+        edu = u.profile.education.all()
+        pro = u.profile.projects.all()
+        certs = u.profile.certificates.all()
+        return render(request, 'user_public_profile.html', context={'title': u.username, 'u': u, 'education': edu,
+                      'projects': pro, 'certificates': certs})
+    except:
+        return HttpResponse("No Such user exists")
 
 
 def create_job_id(digits):
@@ -201,19 +216,18 @@ def view_job(request, id):
             error = ["You must login first!"]
             return render(request, 'login.html', context={'errors': error})
 
-
 # Dashboard of person to which user wants to follow or unfollow
-@login_required
-def user_detail(request, username):
-    user = get_object_or_404(Client, username=username, is_active=True)
-    return render(request, 'detail.html', {'section': 'people', 'user':user})
+# @login_required
+# def user_detail(request, username):
+#     user = get_object_or_404(Client, username=username, is_active=True)
+#     return render(request, 'detail.html', {'section': 'people', 'user': user})
 
 
 # List of recommended users
-@login_required
-def user_list(request):
-    users = Client.objects.filter(is_active=True)
-    return render(request, 'list.html', {'section': 'people', 'users': users})
+# @login_required
+# def recommended_user_list(request):
+#     users = Client.objects.filter(is_active=True, type='user')
+#     return render(request, 'list.html', {'section': 'people', 'users': users})
 
 
 # Follow Function

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div id="titlebar" class="gradient">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+                <h2>Post by - <a href="{{ user.get_absolute_url }}">{{ image_post.posted_by.first_name }} {{ image_post.posted_by.last_name }}</a></h2>
+
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs" class="dark">
+					<ul>
+						<li><a href="{% url 'accounts:home' %}">Home</a></li>
+						<li>Image</li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+    <div class="container">
+        <img src="{{ image_post.image.url }}" class="img-fluid img-thumbnail"><br><br><br>
+        <div><i class="icon-material-outline-date-range"></i>  {{ image_post.created_on }}</div><br><br>
+        <p>{{ image_post.caption|linebreaks }}</p>
+    </div>
+
+    <br><br><br>
+
+    {% include 'footer.html' %}
+{% endblock %}

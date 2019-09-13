@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+    <!-- Titlebar
+================================================== -->
+<div id="titlebar" class="gradient">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2>Add Post</h2>
+
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs" class="dark">
+					<ul>
+						<li><a href="{% url 'accounts:home' %}">Home</a></li>
+						<li>Add Post</li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+ <!-- Page Content
+================================================== -->
+<div class="container">
+	<div class="row">
+		<div class="col-xl-10 offset-xl-1">
+
+
+			<div class="login-register-page">
+				<!-- Welcome Text -->
+				<div class="welcome-text">
+					<h3>Share your thoughts</h3>
+				</div>
+				<!-- Form -->
+
+                    <div class="container">
+                        <div class="card">
+                            <form action="{% url 'feeds:create_post' %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button class="button button-sliding-icon ripple-effect margin-top-10" type="submit"  name="submit" value="1">Save and Publish <i class="icon-material-outline-book"></i></button>
+                            </form>
+                        </div>
+                    </div>
+
+
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+    <br>
+    <br>
+    <br>
+
+
+{%  endif %}
+
+{% include 'footer.html' %}
+
+{%  endblock %}
