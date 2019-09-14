@@ -41,7 +41,7 @@ def dashboard(request):
         edu = usr.profile.education.all()
         pro = usr.profile.projects.all()
         certs = usr.profile.certificates.all()
-        return render(request, 'user_dash.html', context={'title': usr.username, 'education': edu,
+        return render(request, 'user_dash.html', context={'title': usr.first_name, 'education': edu,
                                                           'projects': pro, 'certificates': certs})
 
 
@@ -287,7 +287,10 @@ def manage_candidates(request, job_id):
 
 
 @login_required(login_url='/login')
-@company_required
 def manage_jobs(request):
-    jobs = JobApplication.objects.filter(org=request.user.profile_org)
-    return render(request, 'manage_jobs.html', context={'jobs':jobs})
+    if request.user.is_organisation():
+        jobs = JobApplication.objects.filter(org=request.user.profile_org)
+        return render(request, 'manage_jobs.html', context={'jobs':jobs})
+    else:
+        jobs = AppliedJobs.objects.filter(user = request.user.profile)
+        return render(request, 'manage_jobs_user.html',context={'applications':jobs})
