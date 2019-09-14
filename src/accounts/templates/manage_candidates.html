@@ -63,12 +63,9 @@
 												<!-- Buttons -->
 												<div class="buttons-to-right always-visible margin-top-25 margin-bottom-5">
 													<a href="{{ app.user.resume.url }}" class="button ripple-effect"><i class="icon-feather-file-text"></i> Download CV</a>
-													{% if app.status %}
-                                                    <a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect"><i class="icon-feather-mail"></i> View Your Response</a>
-												    {% else %}
-                                                    <a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect"><i class="icon-feather-mail"></i> Send Message</a>
+													 <a href="{% url 'accounts:see_add_response' app.id %}" class="popup-with-zoom-anim button dark ripple-effect"><i class="icon-feather-mail"></i> {% if app.status %}
+                                                   View Your Response {% else %} Send message {% endif %}</a>
 
-                                                    {% endif %}
                                                 </div>
 											</div>
 										</div>

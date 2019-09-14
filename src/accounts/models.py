@@ -223,6 +223,7 @@ class JobApplication(models.Model):
 
 
 class AppliedJobs(models.Model):
+    id = models.PositiveIntegerField(primary_key=True)
     job = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='applied_job')
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='applied_user')
     response = models.TextField(blank=True)

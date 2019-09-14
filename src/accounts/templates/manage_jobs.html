@@ -52,7 +52,7 @@
 
 											<!-- Details -->
 											<div class="job-listing-description">
-												<h3 class="job-listing-title"><a href="#">{{ job.title }}</a> <span class="dashboard-status-button green">{% if job.status %}Active {% else %} Expired {% endif %}</span>  </h3>
+												<h3 class="job-listing-title"><a href="{% url 'accounts:view_job' job.id %}">{{ job.title }}</a> <span class="dashboard-status-button green">{% if job.status %}Active {% else %} Expired {% endif %}</span>  </h3>
 
 												<!-- Job Listing Footer -->
 												<div class="job-listing-footer">
@@ -61,7 +61,7 @@
                                                        <li><i class="icon-feather-home"></i> {{ job.location }}</li>
 
 													</ul>
-												</div>
+											 	</div>
 											</div>
 										</div>
 									</div>

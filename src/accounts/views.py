@@ -202,6 +202,7 @@ def view_job(request, id):
     job = JobApplication.objects.get(id=id)
     if request.method == 'POST':
         new_app = AppliedJobs()
+        new_app.id = create_job_id(5)
         new_app.job = job
         new_app.user = user.profile
         new_app.date_responded = now()
@@ -260,6 +261,20 @@ def user_follow(request):
         except Client.DoesNotExist:
             return JsonResponse({'status': 'ko'})
     return JsonResponse({'status': 'ko'})
+
+
+@login_required(login_url='/login')
+def see_add_response(request,app_id):
+    application = AppliedJobs.objects.filter(id=app_id)
+    application = application[0]
+    if request.method == 'POST' and request.user.is_organisation():
+        application.status = True
+        application.response = request.POST.get('text')
+        application.save()
+        message = ["Response Sent!"]
+        return render(request, 'response.html', context={'messages':message, 'application':application})
+    else:
+        return render(request, 'response.html', context={'application':application})
 
 
 @login_required(login_url='/login')

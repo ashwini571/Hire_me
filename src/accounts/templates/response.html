@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block body %}
+<div class="dashboard-content-container">
+
+
+<div class="section padding-top-65 padding-bottom-75">
+	<div class="container">
+ 		 {%  if application.status %}
+        <div class="tabs">
+          <div class="tabs-header">
+					<ul>
+						<li class="active"><a href="#tab-1" data-tab-id="1">Message</a></li>
+
+					</ul>
+          </div>
+            <!-- Tab Content -->
+				<div class="tabs-content">
+					<div class="tab active" data-tab-id="1">
+					<p>{{ application.response }}</p>
+                    </div>
+
+				</div>
+        </div>
+ {% else %}
+        <div class="row">
+            <div class="col-xl-12">
+                <h2>Your Message</h2>
+                <br>
+            </div>
+			<div class="col-xl-12">
+
+     <form action="{% url 'accounts:see_add_response' application.id %}" method="post">
+           {% csrf_token %}
+         <textarea colss="30" rows="5" class="with-border" name="text"></textarea>
+         <button type="submit" class="button ripple-effect big margin-top-30"> Send </button>
+     </form>
+           </div>
+       </div>
+        {% endif %}
+    </div>
+</div>
+
+
+</div>
+
+{% include 'footer.html'%}
+
+
+{% endblock %}
