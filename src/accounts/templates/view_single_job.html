@@ -134,7 +134,7 @@
                        </form>
 
                {% elif application.status  %}
-                    <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim">View Response<i class="icon-material-outline-arrow-right-alt"></i></a>
+                    <a href="{% url 'accounts:see_add_response' application.id %}" class="apply-now-button popup-with-zoom-anim">View Response<i class="icon-material-outline-arrow-right-alt"></i></a>
                {% else %}
 
                      <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim">Applied(Pending!)<i class="icon-material-outline-arrow-right-alt"></i></a>

@@ -23,13 +23,26 @@
                         <li {% if section == "people" %}class="selected"{% endif %}><a
                         href="#">People</a></li>
 
-						<li><a href="#">Find Work</a></li>
-
 						<li><a href="#">For Employers</a></li>
                        {% if user.is_authenticated %}
-						<li><a href="{% url 'accounts:dashboard' %}" class="current">Dashboard</a></li>
+						<li><a href="{% url 'accounts:dashboard' %}" >Dashboard</a></li>
                         {% endif %}
-						<li><a href="#">Pages</a></li>
+
+                       <li><a href="#">Find Work</a>
+                          <ul class="dropdown-nav">
+								<li><a href="">Browse Jobs</a></li>
+								<li><a href="{% url 'accounts:browse_companies' 'a' %}">Browse Companies</a></li>
+
+							</ul>
+
+                      </li>
+						<li><a href="#">Post</a>
+							<ul class="dropdown-nav">
+								<li><a href="{% url 'feeds:add_image_post'%}">Image</a></li>
+								<li><a href="{% url 'feeds:create_post'%}">Blog</a></li>
+
+							</ul>
+						</li>
 
 					</ul>
 				</nav>

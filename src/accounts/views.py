@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client, OrgProfile, Contact ,AppliedJobs
@@ -40,7 +41,7 @@ def dashboard(request):
         edu = usr.profile.education.all()
         pro = usr.profile.projects.all()
         certs = usr.profile.certificates.all()
-        return render(request, 'user_dash.html', context={'title': usr.username, 'education': edu,
+        return render(request, 'user_dash.html', context={'title': usr.first_name, 'education': edu,
                                                           'projects': pro, 'certificates': certs})
 
 
@@ -159,10 +160,20 @@ def post_job(request):
 def view_profile(request, username):
     try:
         u = get_object_or_404(Client, username=username)
-        edu = u.profile.education.all()
-        pro = u.profile.projects.all()
-        certs = u.profile.certificates.all()
-        return render(request, 'user_public_profile.html', context={'title': u.username, 'u': u, 'education': edu,
+        if u.is_individual():
+            edu = u.profile.education.all()
+            pro = u.profile.projects.all()
+            certs = u.profile.certificates.all()
+            print(username)
+        else:
+            jobs = JobApplication.objects.filter(org=u.profile_org).values()
+        # if user search for himself , is redirected to his dashboard
+        if username==request.user.username:
+            return redirect('accounts:dashboard')
+        elif u.is_organisation():
+            return render(request, 'company_public_profile.html', context={'title': u.username, 'user': u, 'jobs': jobs})
+        else:
+            return render(request, 'user_public_profile.html', context={'title': u.username, 'u': u, 'education': edu,
                       'projects': pro, 'certificates': certs})
     except:
         return HttpResponse("No Such user exists")
@@ -191,6 +202,7 @@ def view_job(request, id):
     job = JobApplication.objects.get(id=id)
     if request.method == 'POST':
         new_app = AppliedJobs()
+        new_app.id = create_job_id(5)
         new_app.job = job
         new_app.user = user.profile
         new_app.date_responded = now()
@@ -249,3 +261,42 @@ def user_follow(request):
         except Client.DoesNotExist:
             return JsonResponse({'status': 'ko'})
     return JsonResponse({'status': 'ko'})
+
+
+@login_required(login_url='/login')
+def see_add_response(request,app_id):
+    application = AppliedJobs.objects.filter(id=app_id)
+    application = application[0]
+    if request.method == 'POST' and request.user.is_organisation():
+        application.status = True
+        application.response = request.POST.get('text')
+        application.save()
+        message = ["Response Sent!"]
+        return render(request, 'response.html', context={'messages':message, 'application':application})
+    else:
+        return render(request, 'response.html', context={'application':application})
+
+
+@login_required(login_url='/login')
+@company_required
+def manage_candidates(request, job_id):
+    job = JobApplication.objects.filter(id=job_id)
+    applications = AppliedJobs.objects.filter(job__in=job).annotate(no = Count('user'))
+
+    return render(request, 'manage_candidates.html', context={'job':job, 'applications':applications})
+
+
+@login_required(login_url='/login')
+def manage_jobs(request):
+    if request.user.is_organisation():
+        jobs = JobApplication.objects.filter(org=request.user.profile_org)
+        return render(request, 'manage_jobs.html', context={'jobs':jobs})
+    else:
+        jobs = AppliedJobs.objects.filter(user = request.user.profile)
+        return render(request, 'manage_jobs_user.html',context={'applications':jobs})
+
+
+def browse_companies(request,letter):
+    companies = Client.objects.filter(first_name__startswith=letter).filter(type='org')
+    print(companies)
+    return render(request, 'browse_companies.html', context={'companies':companies})
