@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
 from django.utils.timezone import now
 
+
 def ajax_required(f):
     def wrap(request, *args, **kwargs):
         if not request.is_ajax():

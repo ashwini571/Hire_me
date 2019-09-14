@@ -26,10 +26,13 @@ SECRET_KEY = 'xw2k4!-vn2sln#6m#&n=$=7wumpa_bycyr8j)$zmpiilwmmn8b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
+
+LOGIN_REDIRECT_URL = 'accounts:create_user_profile'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1078629071122-f105c9p5go788p2nf12krggoa90gbt87.apps.googleusercontent.com'  # Google Consumer Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'QJz6Q7Rltgk84wJImWuZwubd'  # Google Consumer Secret
+SESSION_COOKIE_SECURE = False
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,8 +45,14 @@ INSTALLED_APPS = [
     'feed',
     'taggit',
     'crispy_forms',
+    'social_django',
     # 'location_field.apps.DefaultConfig',
 
+]
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -65,6 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'HireMe.urls'
@@ -83,6 +93,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
