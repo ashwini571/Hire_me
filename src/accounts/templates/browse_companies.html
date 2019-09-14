@@ -1,0 +1,86 @@
+{%  extends 'base.html' %}
+{%  load static %}
+
+
+{%  block body %}
+<div id="titlebar" class="gradient">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2>Browse Companies</h2>
+
+				<!-- Breadcrumbs -->
+				<nav id="breadcrumbs" class="dark">
+					<ul>
+						<li><a href="#">Home</a></li>
+						<li><a href="#">Find Work</a></li>
+						<li>Browse Companies</li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Page Content
+================================================== -->
+<div class="container">
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="letters-list">
+				<a href="{% url 'accounts:browse_companies' 'a' %}">A</a>
+				<a href="{% url 'accounts:browse_companies' 'b' %}">B</a>
+				<a href="{% url 'accounts:browse_companies' 'c' %}">C</a>
+				<a href="{% url 'accounts:browse_companies' 'd' %}">D</a>
+				<a href="{% url 'accounts:browse_companies' 'e' %}">E</a>
+				<a href="{% url 'accounts:browse_companies' 'f' %}">F</a>
+				<a href="{% url 'accounts:browse_companies' 'g' %}">G</a>
+				<a href="{% url 'accounts:browse_companies' 'h' %}">H</a>
+				<a href="{% url 'accounts:browse_companies' 'i' %}">I</a>
+				<a href="{% url 'accounts:browse_companies' 'j' %}">J</a>
+				<a href="{% url 'accounts:browse_companies' 'k' %}">K</a>
+				<a href="{% url 'accounts:browse_companies' 'l' %}">L</a>
+				<a href="{% url 'accounts:browse_companies' 'm' %}">M</a>
+				<a href="{% url 'accounts:browse_companies' 'n' %}">N</a>
+				<a href="{% url 'accounts:browse_companies' 'o' %}">O</a>
+				<a href="{% url 'accounts:browse_companies' 'p' %}">P</a>
+				<a href="{% url 'accounts:browse_companies' 'q' %}">Q</a>
+				<a href="{% url 'accounts:browse_companies' 'r' %}">R</a>
+				<a href="{% url 'accounts:browse_companies' 's' %}">S</a>
+				<a href="{% url 'accounts:browse_companies' 't' %}">T</a>
+				<a href="{% url 'accounts:browse_companies' 'u' %}">U</a>
+				<a href="{% url 'accounts:browse_companies' 'v' %}">V</a>
+				<a href="{% url 'accounts:browse_companies' 'w' %}">W</a>
+				<a href="{% url 'accounts:browse_companies' 'x' %}">X</a>
+				<a href="{% url 'accounts:browse_companies' 'y' %}">Y</a>
+				<a href="{% url 'accounts:browse_companies' 'z' %}">Z</a>
+			</div>
+		</div>
+		<div class="col-xl-12">
+			<div class="companies-list">
+               {% for comp in companies %}
+				<a href="{% url 'accounts:public_profile' comp.username %}" class="company">
+					<div class="company-inner-alignment">
+						<span class="company-logo"><img src="{{ comp.image_url }}" alt=""></span>
+						<h4>{{ comp.first_name }}</h4>
+						<div class="star-rating" data-rating="5.0"></div>
+					</div>
+				</a>
+                {% endfor %}
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Spacer -->
+<div class="margin-top-70"></div>
+<!-- Spacer / End-->
+
+
+
+{% endblock %}

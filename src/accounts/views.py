@@ -294,3 +294,9 @@ def manage_jobs(request):
     else:
         jobs = AppliedJobs.objects.filter(user = request.user.profile)
         return render(request, 'manage_jobs_user.html',context={'applications':jobs})
+
+
+def browse_companies(request,letter):
+    companies = Client.objects.filter(first_name__startswith=letter).filter(type='org')
+    print(companies)
+    return render(request, 'browse_companies.html', context={'companies':companies})

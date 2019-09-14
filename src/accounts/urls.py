@@ -32,6 +32,7 @@ urlpatterns = [
 
     # org URLS
     path('org_profile/edit', form_views.create_edit_company_profile, name='edit_company_profile'),
+    path('browse_companies/<slug:letter>', views.browse_companies, name='browse_companies'),
     path('manage_jobs', views.manage_jobs, name='manage_jobs'),
     path('manage_candidates/<slug:job_id>', views.manage_candidates, name='manage_candidates'),
     path('see_add_response/<slug:app_id>', views.see_add_response, name='see_add_response'),
