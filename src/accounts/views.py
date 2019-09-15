@@ -200,6 +200,11 @@ def view_job(request, id):
 
     user = request.user
     job = JobApplication.objects.get(id=id)
+    job_tags_ids = job.req_skills.values_list('id', flat=True)
+    print(job_tags_ids)
+    similar_jobs = JobApplication.objects.filter(req_skills__in=job_tags_ids).exclude(id=id)
+    similar_jobs = similar_jobs.annotate(same_req_skills = Count('req_skills')).order_by('-same_req_skills')[:4]
+
     if request.method == 'POST':
         new_app = AppliedJobs()
         new_app.id = create_job_id(5)
@@ -208,7 +213,7 @@ def view_job(request, id):
         new_app.date_responded = now()
         new_app.save()
 
-        return render(request,'view_single_job.html',context={'job':job, 'user': user, 'application':new_app})
+        return render(request,'view_single_job.html',context={'job':job, 'user': user, 'application':new_app, 'similar_jobs':similar_jobs})
     else:
         try:
             application = AppliedJobs.objects.filter(job=job).filter(user=user.profile)
@@ -221,10 +226,10 @@ def view_job(request, id):
         if request.user.is_authenticated:
             if user.is_organisation():
                 print(1)
-                return render(request, 'view_single_job.html', context={'job': job, 'user': user})
+                return render(request, 'view_single_job.html', context={'job': job, 'user': user, 'similar_jobs':similar_jobs})
             else:
                 print(9)
-                return render(request, 'view_single_job.html', context={'job': job, 'user': user,'application':application})
+                return render(request, 'view_single_job.html', context={'job': job, 'user': user,'application':application, 'similar_jobs':similar_jobs})
         else:
             error = ["You must login first!"]
             return render(request, 'login.html', context={'errors': error})
