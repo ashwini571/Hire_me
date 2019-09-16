@@ -23,9 +23,10 @@ def blog_view(request, identifier):
     try:
         post = get_object_or_404(Post, slug=identifier)
         permission = True if post.author == request.user else False
-        return render(request, 'view_post.html', {'title': "{}'s Blog".format(request.user.first_name), 'post': post,
+        return render(request, 'view_post.html', {'title': "{}'s Blog".format(post.author.first_name), 'post': post,
                                                   'permission': permission})
-    except:
+    except Exception as e:
+        print(e)
         return redirect('feed:404')
 
 
@@ -42,6 +43,23 @@ def photo_ko_like_karo(request, identifier):
             image_obj.likes.remove(request.user)
             image_obj.save()
             return redirect(image_obj.get_absolute_url())
+    else:
+        return redirect('feed:404')
+
+
+@login_required(login_url='login/')
+def blog_ko_like_karo(request, identifier):
+    if request.method == 'POST':
+
+        obj = Post.objects.get(slug=identifier)
+        if request.POST.get('action') == 'like':
+            obj.likes.add(request.user)
+            obj.save()
+            return redirect(obj.get_absolute_url())
+        else:
+            obj.likes.remove(request.user)
+            obj.save()
+            return redirect(obj.get_absolute_url())
     else:
         return redirect('feed:404')
 

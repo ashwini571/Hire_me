@@ -12,6 +12,7 @@ class Post(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     content = models.TextField()
     image = models.ImageField(upload_to='blog_images/', null=True, blank=True)
+    likes = models.ManyToManyField(Client, blank=True, related_name='post_likes')
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -35,7 +36,7 @@ class ImagePost(models.Model):
     caption = models.TextField(max_length=1000, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='image_posts/', blank=False, null=False)
-    likes = models.ManyToManyField(Client, blank=True, null=True, related_name='likes')
+    likes = models.ManyToManyField(Client, blank=True, related_name='likes')
 
     class Meta:
         ordering = ['-created_on']
