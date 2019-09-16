@@ -22,6 +22,9 @@ class Comment(models.Model):
         ordering = ('created',)
         app_label = 'feed'
 
+    def __str__(self):
+        return "{} commented at {}".format(self.user.username, str(self.created))
+
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
@@ -90,3 +93,5 @@ class Action(models.Model):
         ordering = ('-created',)
         app_label = 'feed'
 
+    def __str__(self):
+        return self.verb
