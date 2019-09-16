@@ -14,7 +14,8 @@ def image_view(request, identifier):
     try:
         img = get_object_or_404(ImagePost, slug=identifier)
         return render(request, 'view_image.html', context={'title': 'Image Post', 'image_post': img})
-    except:
+    except Exception as e:
+        print(e)
         return redirect('feed:404')
 
 
@@ -25,6 +26,23 @@ def blog_view(request, identifier):
         return render(request, 'view_post.html', {'title': "{}'s Blog".format(request.user.first_name), 'post': post,
                                                   'permission': permission})
     except:
+        return redirect('feed:404')
+
+
+@login_required(login_url='login/')
+def photo_ko_like_karo(request, identifier):
+    if request.method == 'POST':
+
+        image_obj = ImagePost.objects.get(slug=identifier)
+        if request.POST.get('action') == 'like':
+            image_obj.likes.add(request.user)
+            image_obj.save()
+            return redirect(image_obj.get_absolute_url())
+        else:
+            image_obj.likes.remove(request.user)
+            image_obj.save()
+            return redirect(image_obj.get_absolute_url())
+    else:
         return redirect('feed:404')
 
 

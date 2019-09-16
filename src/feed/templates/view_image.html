@@ -21,7 +21,26 @@
 	</div>
 </div>
     <div class="container">
-        <img src="{{ image_post.image.url }}" class="img-fluid img-thumbnail"><br><br><br>
+        <img src="{{ image_post.image.url }}" class="img-fluid img-thumbnail"><br><br>
+        <div class="row">
+            <div class="col-2">
+                <form method="POST" action="{% url 'feed:photo_like' image_post.slug %}">
+                    {% csrf_token %}
+                    {% if request.user not in image_post.likes.all %}
+                        <input type="hidden" value="like" name="action">
+                        <button type="submit" class="button button-sliding-icon">
+                            Like <i class="icon-material-outline-thumb-up"></i>
+                        </button>
+                    {% else %}
+                        <input type="hidden" value="unlike" name="action">
+                        <button type="submit" class="button button-sliding-icon">
+                            Unlike <i class="icon-material-outline-thumb-down"></i>
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="col-7">{{ image_post.likes.all.count }} Likes</div>
+            </div><br>
         <div><i class="icon-material-outline-date-range"></i>  {{ image_post.created_on }}</div><br><br>
         <p>{{ image_post.caption|linebreaks }}</p>
     </div>
