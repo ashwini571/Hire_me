@@ -78,6 +78,13 @@ class ImagePost(models.Model):
 
 
 class Action(models.Model):
+    TYPES = (
+        ('follow', 'Follow'),
+        ('like', 'Like'),
+        ('comment', 'Comment'),
+        ('new_img', 'Added Image'),
+        ('new_post', 'Added Post')
+    )
     user = models.ForeignKey(Client, related_name='actions', db_index=True, on_delete=models.CASCADE)
     verb = models.CharField(max_length=500)
     target_ct = models.ForeignKey(ContentType, blank=True, null=True, related_name='target_obj',
@@ -85,6 +92,7 @@ class Action(models.Model):
     target_id = models.PositiveIntegerField(null=True, blank=True, db_index=True)
     target = GenericForeignKey('target_ct', 'target_id')
     created = models.DateTimeField(auto_now_add=True, db_index=True)
+    type = models.CharField(choices=TYPES, null=True, blank=True, max_length=15)
 
     class Meta:
         verbose_name = 'User Action'

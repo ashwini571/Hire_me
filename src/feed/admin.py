@@ -3,8 +3,8 @@ from .models import Post, ImagePost, Action, Comment
 
 
 class ActionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'verb', 'target', 'created')
-    list_filter = ('created',)
+    list_display = ('user', 'verb', 'target', 'created', 'type')
+    list_filter = ('type',)
     search_fields = ('verb',)
 
 

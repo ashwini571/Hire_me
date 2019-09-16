@@ -256,7 +256,7 @@ def user_follow(request):
             user = Client.objects.get(id=user_id)
             if action == 'follow':
                 Contact.objects.get_or_create(user_from=request.user, user_to=user)
-                create_action(request.user, "started following", user)
+                create_action(request.user, "started following", 'follow', user)
             else:
                 Contact.objects.filter(user_from=request.user, user_to=user).delete()
             return JsonResponse({'status': 'ok'})
@@ -266,7 +266,7 @@ def user_follow(request):
 
 
 @login_required(login_url='/login')
-def see_add_response(request,app_id):
+def see_add_response(request, app_id):
     application = AppliedJobs.objects.filter(id=app_id)
     application = application[0]
     if request.method == 'POST' and request.user.is_organisation():
@@ -274,7 +274,7 @@ def see_add_response(request,app_id):
         application.response = request.POST.get('text')
         application.save()
         message = ["Response Sent!"]
-        return render(request, 'response.html', context={'messages':message, 'application':application})
+        return render(request, 'response.html', context={'messages': message, 'application': application})
     else:
         return render(request, 'response.html', context={'application':application})
 
