@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, ImagePost, Action
+from .models import Post, ImagePost, Action, Comment
 
 
 class ActionAdmin(admin.ModelAdmin):
@@ -20,6 +20,13 @@ class ImagePostAdmin(admin.ModelAdmin):
     search_fields = ('posted_by', 'caption')
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'content_type', 'created',)
+    list_filter = ('content_type',)
+    search_fields = ('user', 'body')
+
+
 admin.site.register(Action, ActionAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(ImagePost, ImagePostAdmin)
+admin.site.register(Comment, CommentAdmin)

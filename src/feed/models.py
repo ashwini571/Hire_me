@@ -2,7 +2,25 @@ from django.db import models
 from accounts.models import Client
 from django.urls import reverse
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+
+
+class Comment(models.Model):
+    limit = models.Q(app_label='feed', model='post') | models.Q(app_label='feed', model='imagepost')
+    user = models.ForeignKey(Client, related_name='comments', db_index=True, on_delete=models.CASCADE)
+    body = models.TextField(max_length=500, blank=False)
+    created = models.DateTimeField(auto_now_add=True)
+    content_type = models.ForeignKey(ContentType, blank=False, on_delete=models.CASCADE, limit_choices_to=limit,
+                                     related_name='child_comment')
+    object_id = models.PositiveIntegerField(blank=False)
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+        db_table = 'comments'
+        ordering = ('created',)
+        app_label = 'feed'
 
 
 class Post(models.Model):
@@ -14,6 +32,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to='blog_images/', null=True, blank=True)
     likes = models.ManyToManyField(Client, blank=True, related_name='post_likes')
     created_on = models.DateTimeField(auto_now_add=True)
+    comments = GenericRelation(Comment, blank=True, null=True)
 
     class Meta:
         ordering = ['-created_on']
@@ -37,6 +56,7 @@ class ImagePost(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='image_posts/', blank=False, null=False)
     likes = models.ManyToManyField(Client, blank=True, related_name='likes')
+    comments = GenericRelation(Comment, blank=True, null=True)
 
     class Meta:
         ordering = ['-created_on']

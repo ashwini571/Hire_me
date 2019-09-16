@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .forms import PostForm, ImagePostForm
-from .models import ImagePost, Post
+from .models import ImagePost, Post, Comment
 from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
 from django.utils.timezone import now
+from django.views.decorators.http import require_POST
 
 
 def error404(request):
@@ -13,7 +14,9 @@ def error404(request):
 def image_view(request, identifier):
     try:
         img = get_object_or_404(ImagePost, slug=identifier)
-        return render(request, 'view_image.html', context={'title': 'Image Post', 'image_post': img})
+        comments = img.comments.all().order_by('created')
+        return render(request, 'view_image.html', context={'title': 'Image Post', 'image_post': img,
+                                                           'comments': comments})
     except Exception as e:
         print(e)
         return redirect('feed:404')
@@ -23,8 +26,9 @@ def blog_view(request, identifier):
     try:
         post = get_object_or_404(Post, slug=identifier)
         permission = True if post.author == request.user else False
+        comments = post.comments.all()
         return render(request, 'view_post.html', {'title': "{}'s Blog".format(post.author.first_name), 'post': post,
-                                                  'permission': permission})
+                                                  'permission': permission, 'comments': comments})
     except Exception as e:
         print(e)
         return redirect('feed:404')
@@ -98,3 +102,21 @@ def create_image_post_view(request):
     else:
         form = ImagePostForm()
         return render(request, 'new_image.html', context={'title': "Add Image", 'form': form})
+
+
+@login_required(login_url='login/')
+@require_POST
+def create_comments_view(request):
+    slug = request.POST.get('slug')
+    ctype = request.POST.get('comment_type')
+    comment = request.POST.get('comments')
+    if ctype == 'blog':
+        blog_post = Post.objects.get(slug=slug)
+        comment_instance = Comment.objects.create(user=request.user, body=comment, content_object=blog_post)
+        comment_instance.save()
+        return redirect(blog_post.get_absolute_url())
+    else:
+        image_post = ImagePost.objects.get(slug=slug)
+        comment_instance = Comment.objects.create(user=request.user, body=comment, content_object=image_post)
+        comment_instance.save()
+        return redirect(image_post.get_absolute_url())
