@@ -15,6 +15,8 @@ urlpatterns = [
 
     path('edit/basic_info', form_views.change_basic_user_data, name='modify_user'),
 
+    path('search/people', views.search_people, name='search_people'),
+    path('search/job', views.search_job, name='search_job'),
 
     # User URLS
     path('info/create_profile', form_views.create_user_profile_view, name='create_user_profile'),

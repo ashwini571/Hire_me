@@ -152,11 +152,13 @@
 				<div class="sidebar-widget row">
 					<h3>Area of Work</h3>
 				    <div class="freelancer-socials margin-top-25">
+                      <div class="keywords-container">
                         <div class="keywords-list">
                            {% for aow in user.profile_org.area_of_work.all %}
                             <span class="keyword"><span class="keyword-text"></span><span class="keyword-text">{{ aow }}</span></span>
                             {% endfor %}
                         </div>
+                      </div>
 					</div>
                                    <div class="clearfix"></div>
 				</div>
@@ -164,11 +166,13 @@
 				<div class="sidebar-widget row">
 					<h3>Our Team</h3>
 				    <div class="freelancer-socials margin-top-25">
+                       <div class="keywords-container">
                         <div class="keywords-list">
                            {% for team in user.profile_org.teams_as_list %}
                                <span class="keyword"><span class="keyword-text"></span><span class="keyword-text">{{ team }}</span></span>
                            {% endfor %}
                         </div>
+                       </div>
 					</div>
                     <div class="clearfix"></div>
 				</div>

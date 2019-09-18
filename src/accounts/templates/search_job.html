@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{%  load static %}
+
+{% block body %}
+
+<div class="container">
+        <div class="row">
+			<div class="col-md-12">
+                <form action="{% url 'accounts:search_job' %}" method="post">
+                    {% csrf_token %}
+				<div class="intro-banner-search-form margin-top-95">
+
+					<!-- Search Field -->
+					<div class="intro-search-field">
+						<label for ="intro-keywords" class="field-title ripple-effect">Search for Job on Hireme!</label>
+						<input id="intro-keywords" type="text" placeholder="Search" name="key">
+					</div>
+
+					<!-- Button -->
+					<div class="intro-search-button">
+						<button class="button ripple-effect" type="submit">Search</button>
+					</div>
+
+				</div>
+                   </form>
+
+			</div>
+
+		</div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+
+			<h3 class="page-title">Search Results</h3>
+
+
+
+			<!-- Freelancers List Container -->
+			<div class="freelancers-container freelancers-list-layout margin-top-35">
+
+               {% for job in jobs %}
+				<!-- Job Listing -->
+				<a href="single-job-page.html" class="job-listing">
+
+					<!-- Job Listing Details -->
+					<div class="job-listing-details">
+						<!-- Logo -->
+						<div class="job-listing-company-logo">
+							<img src="{{ job.org.user.image_url }}" alt="">
+						</div>
+
+						<!-- Details -->
+						<div class="job-listing-description">
+							<h4 class="job-listing-company">{{ job.org.user.first_name }}<span class="verified-badge" title="Verified Employer" data-tippy-placement="top"></span></h4>
+							<h3 class="job-listing-title">{{ job.title }}</h3>
+							<p class="job-listing-text"></p>
+						</div>
+
+						<!-- Bookmark -->
+						<span class="bookmark-icon"></span>
+					</div>
+
+					<!-- Job Listing Footer -->
+					<div class="job-listing-footer">
+						<ul>
+							<li><i class="icon-material-outline-location-on"></i> {{ job.location }}</li>
+							<li><i class="icon-material-outline-business-center"></i> {{ job.type }}</li>
+							<li><i class="icon-material-outline-account-balance-wallet"></i> $ {{ job.salary }}</li>
+						</ul>
+					</div>
+				</a>
+              {% endfor %}
+
+
+			</div>
+			<!-- Tasks Container / End -->
+
+
+
+		</div>
+      </div>
+</div>
+
+  <!-- Spacer -->
+<div class="margin-top-100"></div>
+<!-- Spacer / End-->
+
+{% include 'footer.html' %}
+{% endblock %}
+
+

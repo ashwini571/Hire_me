@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
-from django.db.models import Count
+from django.db.models import Count ,Q
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client, OrgProfile, Contact, AppliedJobs, UserProfile
@@ -326,3 +326,24 @@ def browse_companies(request, letter):
     companies = Client.objects.filter(first_name__startswith=letter).filter(type='org')
     print(companies)
     return render(request, 'browse_companies.html', context={'companies': companies})
+
+
+# search views
+def search_people(request):
+    if request.method == 'POST':
+        key = request.POST.get('key')
+        # this is for search with OR
+        people = Client.objects.filter(Q(first_name__icontains=key)|Q( username__icontains=key)|Q( last_name__icontains=key))
+    else :
+        people=None
+    return render(request, 'search_people.html', context={'people':people})
+
+
+def search_job(request):
+    if request.method == 'POST':
+        key = request.POST.get('key')
+        jobs = JobApplication.objects.filter(Q(title__icontains=key)|Q(type__icontains=key)|Q( category__icontains=key)|Q( location__icontains=key))
+        print(jobs)
+    else:
+        jobs = None
+    return render(request, 'search_job.html', context={'jobs':jobs})
