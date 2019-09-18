@@ -230,3 +230,4 @@ class AppliedJobs(models.Model):
     date_applied = models.DateTimeField(default=now)
     date_responded = models.DateTimeField(blank=True)
     status = models.BooleanField(default=False)
+    match = models.PositiveIntegerField(blank=True)
