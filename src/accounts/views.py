@@ -169,13 +169,13 @@ def view_profile(request, username):
         else:
             jobs = JobApplication.objects.filter(org=u.profile_org).values()
         # if user search for himself , is redirected to his dashboard
-        if username==request.user.username:
+        if username == request.user.username:
             return redirect('accounts:dashboard')
         elif u.is_organisation():
             return render(request, 'company_public_profile.html', context={'title': u.username, 'user': u, 'jobs': jobs})
         else:
             return render(request, 'user_public_profile.html', context={'title': u.username, 'u': u, 'education': edu,
-                      'projects': pro, 'certificates': certs})
+                                                                        'projects': pro, 'certificates': certs})
     except:
         return HttpResponse("No Such user exists")
 

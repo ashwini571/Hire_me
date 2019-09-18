@@ -24,7 +24,7 @@
 								<li><div class="verified-badge-with-title">Verified</div></li>
                           {% endif %}
 
-                                {% with total_followers=u.followers.count %}
+                                {% with total_followers=user.followers.count %}
                                     <li><div class="verified-badge-with-title">
                                         <span class="count">
                                      <span class="total">{{ total_followers }}</span>
@@ -33,9 +33,9 @@
                                     </div></li>
                                      <!-- Follow Button --><br>
 
-                                    <a href="#" data-id="{{ u.id }}"
-                                    data-action="{% if request.user in u.followers.all %}un{% endif %}follow" class="follow button button-sliding-icon ripple-effect">
-                                 {% if request.user not in u.followers.all %}
+                                    <a href="#" data-id="{{ user.id }}"
+                                    data-action="{% if request.user in user.followers.all %}un{% endif %}follow" class="follow button button-sliding-icon ripple-effect">
+                                 {% if request.user not in user.followers.all %}
                                      Follow <i class="icon-material-outline-add-circle-outline"></i>
                                  {% else %}
                                      Unfollow <i class="icon-material-outline-delete"></i>
