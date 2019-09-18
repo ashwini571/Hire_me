@@ -29,10 +29,11 @@ DEBUG = True
 
 # Application definition
 
-LOGIN_REDIRECT_URL = 'accounts:create_user_profile'
+LOGIN_REDIRECT_URL = 'accounts:home'
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1078629071122-f105c9p5go788p2nf12krggoa90gbt87.apps.googleusercontent.com'  # Google Consumer Key
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'QJz6Q7Rltgk84wJImWuZwubd'  # Google Consumer Secret
 SESSION_COOKIE_SECURE = False
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = 'accounts:create_user_profile'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
