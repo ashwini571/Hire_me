@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client, OrgProfile, Contact, AppliedJobs, UserProfile
+from .models import JobApplication, Client, OrgProfile, Contact, AppliedJobs
 from django.shortcuts import get_list_or_404, get_object_or_404
 import random
 from .decorators import normal_user_required, company_required, ajax_required
@@ -11,6 +12,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
 from django.utils.timezone import now
+from feed.utils import create_action
 
 
 def ajax_required(f):
@@ -265,6 +267,7 @@ def user_follow(request):
             user = Client.objects.get(id=user_id)
             if action == 'follow':
                 Contact.objects.get_or_create(user_from=request.user, user_to=user)
+                create_action(request.user, "started following", 'follow', user)
             else:
                 Contact.objects.filter(user_from=request.user, user_to=user).delete()
             return JsonResponse({'status': 'ok'})
@@ -305,8 +308,6 @@ def manage_candidates(request, job_id):
     for app in applications:
         common_skills = intersection(job_tags_ids,app.user.skills.values_list('id', flat=True))
         app.match = (common_skills/len(job_tags_ids))*100
-
-
 
     return render(request, 'manage_candidates.html', context={'job': job[0], 'applications': applications})
 

@@ -59,6 +59,7 @@ class Client(AbstractUser):
         base_manager_name = 'objects'
         default_manager_name = 'objects'
         db_table = 'clients'
+        app_label = 'accounts'
 
 
 # Acts as a by pass model for connecting follower and following person
@@ -69,6 +70,9 @@ class Contact(models.Model):
 
     class Meta:
         ordering = ('-created',)
+        app_label = 'accounts'
+        verbose_name = 'Contact'
+        verbose_name_plural = 'Contacts'
 
     def __str__(self):
         return '{} follows {}'.format(self.user_from, self.user_to)
@@ -101,6 +105,7 @@ class UserProfile(models.Model):
         verbose_name = 'User Profile'
         verbose_name_plural = 'User Profiles'
         db_table = 'user_profiles'
+        app_label = 'accounts'
 
 
 class OrgProfile(models.Model):
@@ -123,6 +128,7 @@ class OrgProfile(models.Model):
         verbose_name = 'Org Profile'
         verbose_name_plural = 'Org Profiles'
         db_table = 'org_profiles'
+        app_label = 'accounts'
 
 
 class Education(models.Model):
@@ -143,6 +149,7 @@ class Education(models.Model):
         verbose_name = 'Education'
         verbose_name_plural = 'Educations'
         db_table = 'user_educations'
+        app_label = 'accounts'
 
 
 class Certifications(models.Model):
@@ -160,6 +167,7 @@ class Certifications(models.Model):
         verbose_name = 'Certification'
         verbose_name_plural = 'Certifications'
         db_table = 'user_certifications'
+        app_label = 'accounts'
 
 
 class Project(models.Model):
@@ -179,6 +187,7 @@ class Project(models.Model):
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
         db_table = 'user_projects'
+        app_label = 'accounts'
 
 
 class JobApplication(models.Model):
@@ -217,6 +226,7 @@ class JobApplication(models.Model):
     class Meta:
         verbose_name = 'Job Application'
         verbose_name_plural = 'Job Applications'
+        app_label = 'accounts'
 
     def __str__(self):
         return "{}-{}".format(self.org.user.username, self.title)
@@ -231,3 +241,8 @@ class AppliedJobs(models.Model):
     date_responded = models.DateTimeField(blank=True)
     status = models.BooleanField(default=False)
     match = models.PositiveIntegerField(blank=True)
+
+    class Meta:
+        verbose_name = 'Applied Job'
+        verbose_name_plural = 'Applied Jobs'
+        app_label = 'accounts'

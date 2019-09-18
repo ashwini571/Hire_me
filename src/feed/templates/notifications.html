@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% if user.is_authenticated %}
+    {% block body %}
+        <div class="container">
+            <div class="col-xl-6">
+					<div class="dashboard-box">
+						<div class="headline">
+							<h3><i class="icon-material-baseline-notifications-none"></i> Notifications</h3>
+							<button class="mark-as-read ripple-effect-dark" data-tippy-placement="left" title="Mark all as read">
+									<i class="icon-feather-check-square"></i>
+							</button>
+						</div>
+						<div class="content">
+							<ul class="dashboard-box-list">
+								{% for action in actions %}
+                                    <li>
+									<span class="notification-icon"><i class="{{ action.icon }}"></i></span>
+									<span class="notification-text">
+										<a href="{{ action.user.get_absolute_url }}"><strong>{{ action.user }}</strong></a> {{ action.verb }} <a href="{{ action.target.get_absolute_url }}">{{ action.target }}</a>
+									</span>
+									<!-- Buttons -->
+									<div class="buttons-to-right">
+										<i class="icon-feather-clock"></i> {{ action.created|date:'H:i' }}
+									</div>
+								</li>
+                                {% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+        </div>
+        <br><br><br>
+        {% include 'footer.html' %}
+    {% endblock %}
+{% endif %}

@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block body %}
     <div id="titlebar" class="gradient">
 	<div class="container">
@@ -19,19 +18,83 @@
 			</div>
             <br>
             <div class="col-md-12">
-                <h1>{{ post.title }} - <a href="{{ user.get_absolute_url }}">{{ post.author.first_name }} {{ post.author.last_name }}</a></h1>
+                <h1>{{ post.title }} - <a href="{{ post.author.get_absolute_url }}">{{ post.author.first_name }} {{ post.author.last_name }}</a></h1>
             </div>
 		</div>
 	</div>
 </div>
     <div class="container">
         <img src="{{ post.image.url }}" class="img-fluid img-thumbnail"><br><br><br>
+        <div class="row">
+            <div class="col-2">
+                <form method="POST" action="{% url 'feed:blog_like' post.slug %}">
+                    {% csrf_token %}
+                    {% if request.user not in post.likes.all %}
+                        <input type="hidden" value="like" name="action">
+                        <button type="submit" class="button button-sliding-icon">
+                            Like <i class="icon-material-outline-thumb-up"></i>
+                        </button>
+                    {% else %}
+                        <input type="hidden" value="unlike" name="action">
+                        <button type="submit" class="button button-sliding-icon">
+                            Unlike <i class="icon-material-outline-thumb-down"></i>
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="col-7">{{ post.likes.all.count }} Likes</div>
+            </div><br>
         <div><i class="icon-material-outline-date-range"></i> Created - {{ post.created_on }}</div><br>
-        <div><i class="icon-material-outline-date-range"></i> Updated - {{ post.updated_on_on }}</div><br><br>
+        <div><i class="icon-material-outline-date-range"></i> Updated - {{ post.updated_on }}</div><br>
         <p>{{ post.content|linebreaks }}</p>
     </div>
 
     <br><br><br>
+
+    {% if comments %}
+        <div class="container">
+        <h2 class="display-3 padding-bottom-5">Comments</h2>
+        <hr>
+        <div class="padding-bottom-10">&nbsp;</div>
+        {% for comment in comments %}
+            <div class="container padding-bottom-5 padding-left-70 padding-top-20 border-bottom">
+                <div class="row padding-left-10 padding-top-10 padding-bottom-10 padding-right-10">
+                    <a class="col-2" href="{{ comment.user.get_absolute_url }}">{{ comment.user.first_name }} {{ comment.user.last_name }} :- </a>
+                    <div class="col-10">
+                        <p>{{ comment.body|linebreaks }}</p>
+                    </div>
+                </div>
+                <div class="row padding-left-10 padding-top-2 padding-bottom-2 padding-right-10">
+                    <div class="col-3"><i class="icon-material-outline-date-range"></i> - {{ comment.created|date:'Y-m-d' }}</div>
+                    <div class="col-3"><i class="icon-feather-clock"></i> - {{ comment.created|date:'H:i' }}</div>
+                </div>
+                <hr class="padding-left-70">
+            </div>
+        {% endfor %}
+        <div class="padding-bottom-30">&nbsp;</div>
+    </div>
+    {% endif %}
+
+    <div class="container">
+        <h2 class="display-3 padding-bottom-5">Add comment</h2>
+        <hr>
+        <div class="container padding-bottom-20 padding-left-70 padding-right-55 padding-top-20">
+        <form method="post" id="form" autocomplete="on" action="{% url 'feed:add_comment' %}">
+            {% csrf_token %}
+            <div class="row">
+
+            <input type="hidden" name="comment_type" value="blog">
+            <input type="hidden" name="slug" value="{{ post.slug }}">
+
+            <div class="col-12">
+                <textarea class="with-border" name="comments" cols="40" rows="5" id="comments" placeholder="Message" spellcheck="true" required="required"></textarea>
+            </div>
+
+            <div class="col-4"><button class="button button-sliding-icon" type="submit">Comment <i class="icon-line-awesome-comments-o"></i></button></div>
+            </div>
+        </form>
+    </div>
+    </div><br><br>
 
     {% include 'footer.html' %}
 {% endblock %}

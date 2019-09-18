@@ -1,5 +1,5 @@
 from django import forms
-from .models import ImagePost, Post
+from .models import ImagePost, Post, Comment
 
 
 class ImagePostForm(forms.ModelForm):
@@ -19,4 +19,13 @@ class PostForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'rows': 4}),
             'image': forms.FileInput(attrs={'class': 'custom-file-input'}),
+        }
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
+        widgets = {
+            'body': forms.Textarea(attrs={'rows': 4}),
         }
