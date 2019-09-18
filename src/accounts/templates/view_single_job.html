@@ -104,14 +104,14 @@
                {% elif not application %}
                        <form action="{% url 'accounts:view_job'  job.id %}" method="post" id="my_form">
                        {% csrf_token %}
-                   <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="apply-now-button popup-with-zoom-anim">Apply Now <i class="icon-material-outline-arrow-right-alt"></i></a>
+                   <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="button full-width button-sliding-icon ripple-effect margin-bottom-15">Apply Now <i class="icon-material-outline-arrow-right-alt"></i></a>
                        </form>
 
                {% elif application.status  %}
-                    <a href="{% url 'accounts:see_add_response' application.id %}" class="apply-now-button popup-with-zoom-anim">View Response<i class="icon-material-outline-arrow-right-alt"></i></a>
+                    <a href="{% url 'accounts:see_add_response' application.id %}" class="button full-width button-sliding-icon ripple-effect margin-bottom-15">View Response<i class="icon-material-outline-arrow-right-alt"></i></a>
                {% else %}
 
-                     <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim">Applied(Pending!)<i class="icon-material-outline-arrow-right-alt"></i></a>
+                     <a href="#small-dialog" class="button full-width button-sliding-icon ripple-effect margin-bottom-15">Applied(Pending!)<i class="icon-material-outline-arrow-right-alt"></i></a>
                {% endif %}
 
                <!-- Sidebar Widget -->

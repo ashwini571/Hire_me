@@ -27,7 +27,7 @@ def ajax_required(f):
 
 
 def home(request):
-    all_jobs = JobApplication.objects.all()[:5]
+    all_jobs = JobApplication.objects.all().order_by('-pk')[:5]
     return render(request, 'index.html', {'title': "Home", 'jobs': all_jobs})
 
 
