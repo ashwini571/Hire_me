@@ -3,6 +3,7 @@ from django.contrib import auth
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, ClientRegistrationForm
+from .models import JobApplication, Client, OrgProfile, Contact, AppliedJobs, UserProfile
 from .models import JobApplication, Client, OrgProfile, Contact, AppliedJobs
 from django.shortcuts import get_list_or_404, get_object_or_404
 import random
@@ -26,7 +27,7 @@ def ajax_required(f):
 
 
 def home(request):
-    all_jobs = JobApplication.objects.all()[:5]
+    all_jobs = JobApplication.objects.all().order_by('-pk')[:5]
     return render(request, 'index.html', {'title': "Home", 'jobs': all_jobs})
 
 
@@ -37,7 +38,7 @@ def dashboard(request):
     if usr.is_organisation():
         org = get_object_or_404(OrgProfile, user=usr)
         jobs = JobApplication.objects.filter(org=org).values()
-        return render(request, 'company_dash.html', context={'user': usr, 'jobs':jobs})
+        return render(request, 'company_dash.html', context={'user': usr, 'jobs': jobs})
     else:
         edu = usr.profile.education.all()
         pro = usr.profile.projects.all()
@@ -78,14 +79,14 @@ def login_view(request):
 
 @login_required(login_url='/login')
 def logout_view(request):
-        auth.logout(request)
-        return redirect('accounts:home')
+    auth.logout(request)
+    return redirect('accounts:home')
 
 
 @login_required(login_url='/login')
 @company_required
 def get_org_profile(request, id):
-    org = OrgProfile.objects.get(user = Client.objects.get(username=id))
+    org = OrgProfile.objects.get(user=Client.objects.get(username=id))
     if request.user.username == id:
         context = {'add_job': 1, 'org_profile': org}
     else:
@@ -172,7 +173,8 @@ def view_profile(request, username):
         if username == request.user.username:
             return redirect('accounts:dashboard')
         elif u.is_organisation():
-            return render(request, 'company_public_profile.html', context={'title': u.username, 'user': u, 'jobs': jobs})
+            return render(request, 'company_public_profile.html',
+                          context={'title': u.username, 'user': u, 'jobs': jobs})
         else:
             return render(request, 'user_public_profile.html', context={'title': u.username, 'u': u, 'education': edu,
                                                                         'projects': pro, 'certificates': certs})
@@ -198,9 +200,13 @@ def create_job_id(digits):
 
 
 def view_job(request, id):
-
     user = request.user
     job = JobApplication.objects.get(id=id)
+    job_tags_ids = job.req_skills.values_list('id', flat=True)
+    print(job_tags_ids)
+    similar_jobs = JobApplication.objects.filter(req_skills__in=job_tags_ids).exclude(id=id)
+    similar_jobs = similar_jobs.annotate(same_req_skills=Count('req_skills')).order_by('-same_req_skills')[:4]
+
     if request.method == 'POST':
         new_app = AppliedJobs()
         new_app.id = create_job_id(5)
@@ -209,7 +215,8 @@ def view_job(request, id):
         new_app.date_responded = now()
         new_app.save()
 
-        return render(request,'view_single_job.html',context={'job':job, 'user': user, 'application':new_app})
+        return render(request, 'view_single_job.html',
+                      context={'job': job, 'user': user, 'application': new_app, 'similar_jobs': similar_jobs})
     else:
         try:
             application = AppliedJobs.objects.filter(job=job).filter(user=user.profile)
@@ -222,13 +229,17 @@ def view_job(request, id):
         if request.user.is_authenticated:
             if user.is_organisation():
                 print(1)
-                return render(request, 'view_single_job.html', context={'job': job, 'user': user})
+                return render(request, 'view_single_job.html',
+                              context={'job': job, 'user': user, 'similar_jobs': similar_jobs})
             else:
                 print(9)
-                return render(request, 'view_single_job.html', context={'job': job, 'user': user,'application':application})
+                return render(request, 'view_single_job.html',
+                              context={'job': job, 'user': user, 'application': application,
+                                       'similar_jobs': similar_jobs})
         else:
             error = ["You must login first!"]
             return render(request, 'login.html', context={'errors': error})
+
 
 # Dashboard of person to which user wants to follow or unfollow
 # @login_required
@@ -276,29 +287,42 @@ def see_add_response(request, app_id):
         message = ["Response Sent!"]
         return render(request, 'response.html', context={'messages': message, 'application': application})
     else:
-        return render(request, 'response.html', context={'application':application})
+        return render(request, 'response.html', context={'application': application})
+
+
+# For getting no of common elements in two lists
+def intersection(lst1, lst2):
+    # Use of hybrid method
+    temp = set(lst2)
+    lst3 = [value for value in lst1 if value in temp]
+    return len(lst3)
 
 
 @login_required(login_url='/login')
 @company_required
 def manage_candidates(request, job_id):
     job = JobApplication.objects.filter(id=job_id)
-    applications = AppliedJobs.objects.filter(job__in=job).annotate(no = Count('user'))
+    job_tags_ids = job[0].req_skills.values_list('id', flat=True)
+    print(job_tags_ids)
+    applications = AppliedJobs.objects.filter(job__in=job)
+    for app in applications:
+        common_skills = intersection(job_tags_ids,app.user.skills.values_list('id', flat=True))
+        app.match = (common_skills/len(job_tags_ids))*100
 
-    return render(request, 'manage_candidates.html', context={'job':job, 'applications':applications})
+    return render(request, 'manage_candidates.html', context={'job': job[0], 'applications': applications})
 
 
 @login_required(login_url='/login')
 def manage_jobs(request):
     if request.user.is_organisation():
         jobs = JobApplication.objects.filter(org=request.user.profile_org)
-        return render(request, 'manage_jobs.html', context={'jobs':jobs})
+        return render(request, 'manage_jobs.html', context={'jobs': jobs})
     else:
-        jobs = AppliedJobs.objects.filter(user = request.user.profile)
-        return render(request, 'manage_jobs_user.html',context={'applications':jobs})
+        jobs = AppliedJobs.objects.filter(user=request.user.profile)
+        return render(request, 'manage_jobs_user.html', context={'applications': jobs})
 
 
-def browse_companies(request,letter):
+def browse_companies(request, letter):
     companies = Client.objects.filter(first_name__startswith=letter).filter(type='org')
     print(companies)
-    return render(request, 'browse_companies.html', context={'companies':companies})
+    return render(request, 'browse_companies.html', context={'companies': companies})

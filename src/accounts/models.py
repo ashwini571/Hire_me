@@ -220,7 +220,6 @@ class JobApplication(models.Model):
     descr = models.TextField(blank=False)
     location = models.CharField(blank=False, null=False, max_length=100)
     status = models.BooleanField(default=True)
-    applicants = models.ForeignKey(UserProfile,on_delete=models.CASCADE,blank=True)
     req_skills = TaggableManager()
 
     class Meta:
@@ -240,6 +239,7 @@ class AppliedJobs(models.Model):
     date_applied = models.DateTimeField(default=now)
     date_responded = models.DateTimeField(blank=True)
     status = models.BooleanField(default=False)
+    match = models.PositiveIntegerField(blank=True,null=True)
 
     class Meta:
         verbose_name = 'Applied Job'

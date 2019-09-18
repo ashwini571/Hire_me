@@ -173,8 +173,10 @@
 				<div class="sidebar-widget">
 					<h3>Resume</h3>
 					<div class="attachments-container">
+                        {% if user.profile.resume %}
 						<a href="{{ user.profile.resume.url }}" class="attachment-box ripple-effect"><span>Resume</span><i>PDF</i></a>
-					</div>
+					     {% endif %}
+                    </div>
 				</div>
 
 				<!-- Sidebar Widget -->
