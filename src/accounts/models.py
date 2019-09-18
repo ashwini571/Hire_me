@@ -211,7 +211,7 @@ class JobApplication(models.Model):
         ('mis', 'Miscellaneous'),
         ('pr', 'Public Relations'),
     )
-    id = models.CharField(max_length=10,primary_key=True)
+    id = models.CharField(max_length=10, primary_key=True)
     org = models.ForeignKey(OrgProfile, on_delete=models.CASCADE, related_name='JobApplication')
     title = models.CharField(blank=False, null=False, max_length=100)
     category = models.CharField(max_length=7,choices=cat_choice,default='i')
@@ -245,3 +245,6 @@ class AppliedJobs(models.Model):
         verbose_name = 'Applied Job'
         verbose_name_plural = 'Applied Jobs'
         app_label = 'accounts'
+
+    def __str__(self):
+        return self.job.title

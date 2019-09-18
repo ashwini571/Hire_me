@@ -83,7 +83,10 @@ class Action(models.Model):
         ('like', 'Like'),
         ('comment', 'Comment'),
         ('new_img', 'Added Image'),
-        ('new_post', 'Added Post')
+        ('new_post', 'Added Post'),
+        ('new_job', 'Added Job'),
+        ('job_response', 'Responded to Job'),
+        ('applied_to_job', 'Applied for Job'),
     )
     user = models.ForeignKey(Client, related_name='actions', db_index=True, on_delete=models.CASCADE)
     verb = models.CharField(max_length=500)
