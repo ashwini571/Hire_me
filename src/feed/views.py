@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
 from django.utils.timezone import now
 from django.views.decorators.http import require_POST
-from .utils import create_action, get_icon
+from .utils import create_action, get_icon, filter_notifications
 
 
 def error404(request):
@@ -117,8 +117,7 @@ def create_comments_view(request):
     comment = request.POST.get('comments')
     if ctype == 'blog':
         blog_post = Post.objects.get(slug=slug)
-        comment_instance = Comment.objects.create(user=request.user, body=comment, content_object=blog_post,
-                                                  type='comment')
+        comment_instance = Comment.objects.create(user=request.user, body=comment, content_object=blog_post)
         comment_instance.save()
         create_action(request.user, "commented on {} {}'s blog".format(blog_post.author.first_name,
                                                                        blog_post.author.last_name), 'comment', blog_post)
@@ -133,18 +132,17 @@ def create_comments_view(request):
         return redirect(image_post.get_absolute_url())
 
 
-@login_required
+@login_required(login_url='/login')
 def notification_view(request):
     # Display all actions by default
     actions = Action.objects.exclude(user=request.user)
-    for action in actions:
-        action.icon = get_icon(action.type)
-    print(actions)
+
     following_ids = request.user.following.values_list('id', flat=True)
     if following_ids:
         # If user is following others, retrieve only their actions
         actions = actions.filter(user_id__in=following_ids)
-        for action in actions:
-            action.icon = get_icon(action.type)
-        actions = actions[:10]
+    actions = actions[:20]
+    actions = filter_notifications(request, actions)
+    for action in actions:
+        action.icon = get_icon(action.type)
     return render(request, 'notifications.html', {'title': 'Notifications', 'actions': actions})

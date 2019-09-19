@@ -6,24 +6,12 @@ from .forms import LoginForm, ClientRegistrationForm
 from .models import JobApplication, Client, OrgProfile, Contact, AppliedJobs, UserProfile
 from .models import JobApplication, Client, OrgProfile, Contact, AppliedJobs
 from django.shortcuts import get_list_or_404, get_object_or_404
-import random
+from .utils import create_job_id
 from .decorators import normal_user_required, company_required, ajax_required
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseBadRequest
 from django.utils.timezone import now
 from feed.utils import create_action
-
-
-def ajax_required(f):
-    def wrap(request, *args, **kwargs):
-        if not request.is_ajax():
-            return HttpResponseBadRequest()
-        return f(request, *args, **kwargs)
-
-    wrap.__doc__ = f.__doc__
-    wrap.__name__ = f.__name__
-    return wrap
 
 
 def home(request):
@@ -152,6 +140,7 @@ def post_job(request):
             application.req_skills.add(skill)
         msg = ["Job Added, Job Id is:" + str(id)]
         application.save()
+        create_action(request.user, "posted a new job", 'new_job', application)
         return render(request, 'post_job.html', context={'messages': msg})
     else:
         print(0)
@@ -182,23 +171,6 @@ def view_profile(request, username):
         return HttpResponse("No Such user exists")
 
 
-def create_job_id(digits):
-    lower = 10 ** (digits - 1)
-    upper = 10 ** digits - 1
-    uid = random.randint(lower, upper)
-
-    # check if Quiz already exists if not, return id
-    try:
-        job_applications = JobApplication.objects.get(job_id=uid)
-    except:
-        job_applications = None
-
-    if not job_applications:
-        return uid
-    else:
-        create_job_id(digits)  # If uid already exists recreate uid
-
-
 def view_job(request, id):
     user = request.user
     job = JobApplication.objects.get(id=id)
@@ -214,6 +186,7 @@ def view_job(request, id):
         new_app.user = user.profile
         new_app.date_responded = now()
         new_app.save()
+        create_action(request.user, 'applied to a job', 'applied_to_job', new_app)
 
         return render(request, 'view_single_job.html',
                       context={'job': job, 'user': user, 'application': new_app, 'similar_jobs': similar_jobs})
@@ -284,6 +257,7 @@ def see_add_response(request, app_id):
         application.status = True
         application.response = request.POST.get('text')
         application.save()
+        create_action(request.user, "responded to your job application", 'job_response', application)
         message = ["Response Sent!"]
         return render(request, 'response.html', context={'messages': message, 'application': application})
     else:

@@ -2,9 +2,10 @@ import datetime
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from .models import Action
+from accounts.models import AppliedJobs
 
 
-def create_action(user, verb, type,target=None):
+def create_action(user, verb, type, target=None):
     # check for any similar action made in the last minute
     now = timezone.now()
     last_minute = now - datetime.timedelta(seconds=60)
@@ -27,10 +28,28 @@ def get_icon(action_type):
         return "icon-material-outline-thumb-up"
     elif action_type == 'comment':
         return "icon-feather-message-circle"
-    elif action_type == 'add_img':
+    elif action_type == 'new_img':
         return "icon-material-outline-add-a-photo"
-    elif action_type == 'add_post':
+    elif action_type == 'new_post':
         return "icon-material-outline-bookmarks"
+    elif action_type == 'new_job':
+        return "icon-line-awesome-street-view"
+    elif action_type == "job_response":
+        return "icon-feather-message-square"
+    elif action_type == "applied_to_job":
+        return "icon-feather-monitor"
     else:
         return "icon-material-outline-rate-review"
+
+
+def filter_notifications(request, actions):
+    invalid_actions = []
+    for action in actions:
+        if action.type == "job_response":
+            app = AppliedJobs.objects.get(id=action.target_id)
+            if app.user != request.user.profile:
+                invalid_actions.append(action)
+    print(invalid_actions)
+    actions = [action for action in actions if action not in invalid_actions]
+    return actions
 
