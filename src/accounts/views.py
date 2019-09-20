@@ -309,7 +309,7 @@ def search_people(request):
     if request.method == 'POST':
         key = request.POST.get('key')
         # this is for search with OR
-        people = Client.objects.filter(Q(first_name__icontains=key)|Q( username__icontains=key)|Q( last_name__icontains=key))
+        people = Client.objects.filter(Q(first_name__icontains=key)|Q(username__icontains=key)|Q(last_name__icontains=key))
     else:
         people=None
     return render(request, 'search_people.html', context={'people':people})
@@ -321,7 +321,7 @@ def search_job(request):
             key = request.GET.get('key')
         else:
             key = " "
-        jobs = JobApplication.objects.filter(Q(title__icontains=key)|Q(type__icontains=key)|Q( category__icontains=key)|Q( location__icontains=key))
+        jobs = JobApplication.objects.filter(Q(title__icontains=key)|Q(type__icontains=key)|Q(category__icontains=key)|Q(location__icontains=key)|Q(org__user__username__contains=key))
         paginator = Paginator(jobs, 2)  # Show 15 issues per page
         page = request.GET.get('page', 1)
         try:
