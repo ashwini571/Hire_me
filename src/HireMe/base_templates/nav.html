@@ -18,24 +18,13 @@
 				<nav id="navigation">
 					<ul id="responsive">
 
-						<li><a href="{% url 'accounts:home' %}">Home</a></li>
-
-                        <li {% if section == "people" %}class="selected"{% endif %}><a
-                        href="#">People</a></li>
-
-						<li><a href="#">For Employers</a></li>
+						 <li><a href="{% url 'accounts:home' %}">Home</a></li>
+                        <li><a href="{% url 'accounts:search_people'  %}">People</a></li>
+                        <li><a href="{% url 'accounts:browse_companies' 'a' %}">Companies</a></li>
                        {% if user.is_authenticated %}
 						<li><a href="{% url 'accounts:dashboard' %}" >Dashboard</a></li>
                         {% endif %}
 
-                       <li><a href="#">Find </a>
-                          <ul class="dropdown-nav">
-								<li><a href="{% url 'accounts:search_people'  %}">People</a></li>
-								<li><a href="{% url 'accounts:browse_companies' 'a' %}">Browse Companies</a></li>
-
-							</ul>
-
-                      </li>
 						<li><a href="#">Post</a>
 							<ul class="dropdown-nav">
 								<li><a href="{% url 'feeds:add_image_post'%}">Image</a></li>

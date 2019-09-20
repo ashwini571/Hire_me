@@ -107,7 +107,7 @@
 
 					{%  for job in jobs %}
 					<!-- Job Listing -->
-					<a href="single-job-page.html" class="job-listing with-apply-button">
+					<a href="{% url 'accounts:view_job' job.id %}" class="job-listing with-apply-button">
 
 						<!-- Job Listing Details -->
 						<div class="job-listing-details">
@@ -133,7 +133,7 @@
 							</div>
 
 							<!-- Apply Button -->
-							<span class="list-apply-button ripple-effect">Manage</span>
+							<span class="list-apply-button ripple-effect">Apply</span>
 						</div>
 					</a>
                    {% endfor %}
@@ -202,7 +202,7 @@
 						<div class ="freelancer-socials margin-top-40" id="streetView">
 						<a href="#" >{{ user.profile_org.location }}</a>
                          </div>
-                                       <div class="clearfix"></div>
+                        <div class="clearfix"></div>
 				</div>
 
 
@@ -223,11 +223,13 @@
 				<div class="sidebar-widget row">
 					<h3>Our Team</h3>
 				    <div class="freelancer-socials margin-top-25">
+                       <div class="keywords-container">
                         <div class="keywords-list">
                            {% for team in user.profile_org.teams_as_list %}
                                <span class="keyword"><span class="keyword-text"></span><span class="keyword-text">{{ team }}</span></span>
                            {% endfor %}
                         </div>
+                       </div>
 					</div>
                     <div class="clearfix"></div>
 				</div>

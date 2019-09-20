@@ -93,7 +93,7 @@
 									<b class="col-5">Designed under - </b><p class="col-7">{{ project.associated_with }}</p>
 								</div>
 								<div class="item-description">
-									<p>{{ project.description|linebreaks }}</p>
+									<p>{{ project.description|linebreaks|truncatechars:255}}</p>
 								</div>
 							</div>
 						</div>
