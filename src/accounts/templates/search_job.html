@@ -6,14 +6,14 @@
 <div class="container">
         <div class="row">
 			<div class="col-md-12">
-                <form action="{% url 'accounts:search_job' %}" method="post">
-                    {% csrf_token %}
+                <form action="{% url 'accounts:search_job' %}" method="get">
+
 				<div class="intro-banner-search-form margin-top-95">
 
 					<!-- Search Field -->
 					<div class="intro-search-field">
 						<label for ="intro-keywords" class="field-title ripple-effect">Search for Job on Hireme!</label>
-						<input id="intro-keywords" type="text" placeholder="Search" name="key">
+						<input id="intro-keywords" type="text" placeholder="Search" name="key" value="">
 					</div>
 
 					<!-- Button -->
@@ -35,12 +35,13 @@
 			<h3 class="page-title">Search Results</h3>
 
 
+               {% for job in jobs %}
 
 			<!-- Freelancers List Container -->
 			<div class="freelancers-container freelancers-list-layout margin-top-35">
 
-               {% for job in jobs %}
 				<!-- Job Listing -->
+
 				<a href="single-job-page.html" class="job-listing">
 
 					<!-- Job Listing Details -->
@@ -54,8 +55,10 @@
 						<div class="job-listing-description">
 							<h4 class="job-listing-company">{{ job.org.user.first_name }}<span class="verified-badge" title="Verified Employer" data-tippy-placement="top"></span></h4>
 							<h3 class="job-listing-title">{{ job.title }}</h3>
-							<p class="job-listing-text"></p>
+							<p class="job-listing-text">{{ job.descr|truncatechars:255 }}</p>
+
 						</div>
+
 
 						<!-- Bookmark -->
 						<span class="bookmark-icon"></span>
@@ -70,12 +73,36 @@
 						</ul>
 					</div>
 				</a>
-              {% endfor %}
+                   <br>
+
 
 
 			</div>
 			<!-- Tasks Container / End -->
+              {% endfor %}
 
+				<!-- Pagination -->
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12">
+						<!-- Pagination -->
+						<div class="pagination-container margin-top-30 margin-bottom-60">
+							<nav class="pagination">
+								<ul>
+                                    {% if jobs.has_previous %}
+									<li class="pagination-arrow"><a href="?page={{ jobs.previous_page_number }}" class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-left"></i></a></li>
+                                    {% endif %}
+									<li><a href="#" class="ripple-effect">{{ jobs.number }} of {{ jobs.paginator.num_pages }}</a></li>
+
+                                    {% if jobs.has_next %}
+									<li class="pagination-arrow"><a href="?page={{ jobs.next_page_number }}" class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
+								 {% endif %}
+                                </ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+				<!-- Pagination / End -->
 
 
 		</div>
@@ -84,6 +111,8 @@
 
   <!-- Spacer -->
 <div class="margin-top-100"></div>
+
+
 <!-- Spacer / End-->
 
 {% include 'footer.html' %}

@@ -23,8 +23,7 @@
 		<!-- Search Bar -->
 		<div class="row">
 			<div class="col-md-12">
-                <form action="{% url 'accounts:search_job' %}" method="post">
-                    {% csrf_token %}
+                <form action="{% url 'accounts:search_job' %}" method="get">
 				<div class="intro-banner-search-form margin-top-95">
 
 					<!-- Search Field -->

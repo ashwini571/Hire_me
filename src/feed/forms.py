@@ -8,7 +8,7 @@ class ImagePostForm(forms.ModelForm):
         fields = ['image', 'caption']
         widgets = {
             'caption': forms.Textarea(attrs={'rows': 4}),
-            'image': forms.FileInput(attrs={'class': 'custom-file-input'})
+            'image': forms.FileInput(attrs={'class': 'attachment-box ripple-effect'})
         }
 
 
@@ -18,7 +18,7 @@ class PostForm(forms.ModelForm):
         fields = ['title', 'content', 'image']
         widgets = {
             'content': forms.Textarea(attrs={'rows': 4}),
-            'image': forms.FileInput(attrs={'class': 'custom-file-input'}),
+            'image': forms.FileInput(attrs={'class': 'attachment-box ripple-effect'}),
         }
 
 
