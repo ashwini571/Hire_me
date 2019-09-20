@@ -17,7 +17,7 @@
 							<h3>{{ job.title }}</h3>
 							<h5>About the Employer </h5>
 							<ul>
-								<li><a href="single-company-profile.html"><i class="icon-material-outline-business"></i> {{ job.org.user.first_name }}</a></li>
+								<li><a href="{{ job.org.user.get_absolute_url }}"><i class="icon-material-outline-business"></i> {{ job.org.user.first_name }}</a></li>
 								<li><div class="star-rating" data-rating="4.9"></div></li>
                               {% if job.org.verification %}
 								<li><div class="verified-badge-with-title">Verified</div></li>

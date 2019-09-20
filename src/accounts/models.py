@@ -51,7 +51,7 @@ class Client(AbstractUser):
         if self.type == 'user':
             return reverse('accounts:public_profile', kwargs={'username': self.username})
         else:
-            pass
+            return reverse('accounts:public_profile', kwargs={'username': self.username})
 
     class Meta:
         verbose_name = 'Client'
@@ -229,6 +229,9 @@ class JobApplication(models.Model):
 
     def __str__(self):
         return "{}-{}".format(self.org.user.username, self.title)
+
+    def get_absolute_url(self):
+        return reverse('accounts:view_job', kwargs={'id': self.id})
 
 
 class AppliedJobs(models.Model):
