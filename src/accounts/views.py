@@ -310,7 +310,7 @@ def search_people(request):
         key = request.POST.get('key')
         # this is for search with OR
         people = Client.objects.filter(Q(first_name__icontains=key)|Q( username__icontains=key)|Q( last_name__icontains=key))
-    else :
+    else:
         people=None
     return render(request, 'search_people.html', context={'people':people})
 
