@@ -15,6 +15,7 @@ urlpatterns = [
     path(r'404', views.error404, name='404'),
     path(r'comments/', views.create_comments_view, name='add_comment'),
     path(r'notifications/', views.notification_view, name='notifications'),
+    path(r'blog/<slug:username>', views.blog_list_view, name='blog'),
 ]
 
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

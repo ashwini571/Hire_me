@@ -11,7 +11,7 @@
 
 				<!-- Logo -->
 				<div id="logo">
-					<a href="index-2.html"><img src="{% static 'images/logo3.png' %}" alt=""></a>
+					<a href="{% url 'accounts:home' %}"><img src="{% static 'images/logo3.png' %}" alt=""></a>
 				</div>
 
 				<!-- Main Navigation -->
@@ -24,14 +24,15 @@
                        {% if user.is_authenticated %}
 						<li><a href="{% url 'accounts:dashboard' %}" >Dashboard</a></li>
                         {% endif %}
+						<li><a href="{% url 'feed:blog' request.user %}" >Blog</a></li>
 
-						<li><a href="#">Post</a>
-							<ul class="dropdown-nav">
-								<li><a href="{% url 'feeds:add_image_post'%}">Image</a></li>
-								<li><a href="{% url 'feeds:create_post'%}">Blog</a></li>
-
-							</ul>
-						</li>
+{#						<li><a href="#">Post</a>#}
+{#							<ul class="dropdown-nav">#}
+{#								<li><a href="{% url 'feeds:add_image_post'%}">Image</a></li>#}
+{#								<li><a href="{% url 'feeds:create_post'%}">Blog</a></li>#}
+{##}
+{#							</ul>#}
+{#						</li>#}
 
 					</ul>
 				</nav>
@@ -126,6 +127,8 @@
 
 						<ul class="user-menu-small-nav" >
 							<li><a href="{% url 'accounts:dashboard' %}"><i class="icon-material-outline-dashboard"></i> Dashboard</a></li>
+                            <li><a href="{% url 'feed:add_image_post' %}"><i class="icon-material-outline-add-a-photo"></i> Add Image</a></li>
+                            <li><a href="{% url 'feed:create_post' %}"><i class="icon-material-outline-library-add"></i> Add Blog</a></li>
 							<li><a href="{% url 'accounts:settings' %}"><i class="icon-material-outline-settings"></i> Settings</a></li>
 							<li><a href="{% url 'accounts:logout' %}"><i class="icon-material-outline-power-settings-new"></i> Logout</a></li>
 						</ul>

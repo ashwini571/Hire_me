@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block body %}
+
+    <div id="titlebar" class="white margin-bottom-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Blog</h2>
+                    <a href="{{ author.get_absolute_url }}"><span>- {{ author.first_name }} {{ author.last_name }}</span></a>
+
+                    <!-- Breadcrumbs -->
+                    <nav id="breadcrumbs" class="dark">
+                        <ul>
+                            <li><a href="{% url 'accounts:home' %}">Home</a></li>
+                            <li>Blog</li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if blogs %}
+        <div id="titlebar" class="white margin-bottom-10">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Posts</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="section white padding-top-0 padding-bottom-60 full-width-carousel-fix">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="blog-carousel">
+
+                            {% for blog in blogs %}
+                                <a href="{{ blog.get_absolute_url }}" class="blog-compact-item-container">
+                                    <div class="blog-compact-item">
+                                        <img src="{{ blog.image.url }}" alt="">
+                                        <span class="blog-item-tag">{{ blog.likes.all.count }} Like{%  if blog.likes.count.all > 1 %}s{% endif %}</span>
+                                        <div class="blog-compact-item-content">
+                                            <ul class="blog-post-tags">
+                                                <li>{{ blog.created_on|date }}</li>
+                                            </ul>
+                                            <h3>{{ blog.title }}</h3>
+                                            <p>{{ blog.content| slice:":80" | safe }} ...</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- Recent Blog Posts / End -->
+    {% endif %}
+
+
+
+    {% if images %}
+
+    <div id="titlebar" class="white margin-bottom-10">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Images</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+     <div class="section white padding-top-0 padding-bottom-60 full-width-carousel-fix">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="blog-carousel">
+
+                            {% for image in images %}
+                                <a href="{{ image.get_absolute_url }}" class="blog-compact-item-container">
+                                    <div class="blog-compact-item">
+                                        <img src="{{ image.image.url }}" alt="">
+                                        <span class="blog-item-tag">{{ image.likes.all.count }} Like{%  if image.likes.count.all > 1 %}s{% endif %}</span>
+                                        <div class="blog-compact-item-content">
+                                            <ul class="blog-post-tags">
+                                                <li>{{ image.created_on|date }}</li>
+                                            </ul>
+                                            <p>{{ image.caption| slice:":80" | safe }} ...</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+    {% include 'footer.html' %}
+{% endblock %}

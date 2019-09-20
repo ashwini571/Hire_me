@@ -6,12 +6,13 @@
 		<div class="row">
 			<div class="col-md-12">
 
-                <h2>Post by - <a href="{{ user.get_absolute_url }}">{{ image_post.posted_by.first_name }} {{ image_post.posted_by.last_name }}</a></h2>
+                <h2>Image by - <a href="{{ user.get_absolute_url }}">{{ image_post.posted_by.first_name }} {{ image_post.posted_by.last_name }}</a></h2>
 
 				<!-- Breadcrumbs -->
 				<nav id="breadcrumbs" class="dark">
 					<ul>
 						<li><a href="{% url 'accounts:home' %}">Home</a></li>
+                        <li><a href="{% url 'feed:blog' image_post.posted_by.username %}">Blog</a></li>
 						<li>Image</li>
 					</ul>
 				</nav>
@@ -19,9 +20,11 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div><br><br>
     <div class="container">
         <img src="{{ image_post.image.url }}" class="img-fluid img-thumbnail"><br><br>
+        <p>{{ image_post.caption|linebreaks }}</p>
+        <br><br>
         <div class="row">
             <div class="col-2">
                 <form method="POST" action="{% url 'feed:photo_like' image_post.slug %}">
@@ -39,58 +42,63 @@
                     {% endif %}
                 </form>
             </div>
-            <div class="col-7">{{ image_post.likes.all.count }} Likes</div>
+            <div class="verified-badge-with-title margin-top-10">{{ image_post.likes.all.count }} Like {% if image_post.likes.all.count > 1 %}s{% endif %}</div>
             </div><br>
-        <div><i class="icon-material-outline-date-range"></i>  {{ image_post.created_on }}</div><br><br>
-        <p>{{ image_post.caption|linebreaks }}</p>
+        <div class="row">
+            <div class="col-6"><i class="icon-material-outline-date-range"></i>  {{ image_post.created_on|date }}</div>
+            <div class="col-6"><i class="icon-material-outline-access-time"></i> {{ image_post.created_on|timesince }} ago</div>
+        </div>
     </div>
 
     <br><br><br>
 
     {% if comments %}
-        <div class="container">
-        <h2 class="display-3 padding-bottom-5">Comments</h2>
-        <hr>
-        <div class="padding-bottom-10">&nbsp;</div>
-        {% for comment in comments %}
-            <div class="container padding-bottom-5 padding-left-70 padding-top-20 border-bottom">
-                <div class="row padding-left-10 padding-top-10 padding-bottom-10 padding-right-10">
-                    <a class="col-2" href="{{ comment.user.get_absolute_url }}">{{ comment.user.first_name }} {{ comment.user.last_name }} :- </a>
-                    <div class="col-10">
-                        <p>{{ comment.body|linebreaks }}</p>
-                    </div>
-                </div>
-                <div class="row padding-left-10 padding-top-2 padding-bottom-2 padding-right-10">
-                    <div class="col-3"><i class="icon-material-outline-date-range"></i> - {{ comment.created|date:'Y-m-d' }}</div>
-                    <div class="col-3"><i class="icon-feather-clock"></i> - {{ comment.created|date:'H:i' }}</div>
-                </div>
-                <hr class="padding-left-70">
-            </div>
-        {% endfor %}
-        <div class="padding-bottom-30">&nbsp;</div>
+    <div class="container">
+        <div class="row">
+				<div class="col-xl-12">
+					<section class="comments">
+						<h3 class="margin-top-45 margin-bottom-0">Comments <span class="comments-amount">({{ image_post.comments.all.count }})</span></h3>
+
+						<ul>
+                            {% for comment in comments %}
+							<li>
+								<div class="avatar"><img src="{{ comment.user.image_url }}" alt=""></div>
+								<div class="comment-content"><div class="arrow-comment"></div>
+									<div class="comment-by">
+                                        <a href="{{ comment.user.get_absolute_url }}">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>
+                                        <span class="date">{{ comment.created|date }}</span>
+									</div>
+									<p>{{ comment.body }}</p>
+								</div>
+                            </li>
+                            {% endfor %}
+                     </ul>
+
+					</section>
+				</div>
+			</div>
     </div>
     {% endif %}
 
+    <br><br>
     <div class="container">
-        <h2 class="display-3 padding-bottom-5">Add comment</h2>
-        <hr>
-        <div class="container padding-bottom-20 padding-left-70 padding-right-55 padding-top-20">
-        <form method="post" id="form" autocomplete="on" action="{% url 'feed:add_comment' %}">
-            {% csrf_token %}
-            <div class="row">
+    <div class="row">
+        <div class="col-xl-12">
 
-            <input type="hidden" name="comment_type" value="image">
-            <input type="hidden" name="slug" value="{{ image_post.slug }}">
+            <h3 class="margin-top-35 margin-bottom-30">Add Comment</h3>
 
-            <div class="col-12">
-                <textarea class="with-border" name="comments" cols="40" rows="5" id="comments" placeholder="Message" spellcheck="true" required="required"></textarea>
-            </div>
+            <!-- Form -->
+            <form method="post" id="add-comment" action="{% url 'feed:add_comment' %}">
+                {% csrf_token %}
 
-            <div class="col-4"><button class="button button-sliding-icon" type="submit">Comment <i class="icon-line-awesome-comments-o"></i></button></div>
-            </div>
-        </form>
+                <input type="hidden" name="comment_type" value="image">
+                <input type="hidden" name="slug" value="{{ image_post.slug }}">
+                <textarea  name="comments" cols="30" rows="5" placeholder="Comment" required="required" spellcheck="true"></textarea>
+                <div class="col-4"><button class="button button-sliding-icon" type="submit">Comment <i class="icon-line-awesome-comments-o"></i></button></div>
+            </form>
+        </div>
     </div>
-    </div><br><br>
-
+    </div>
+    <br><br>
     {% include 'footer.html' %}
 {% endblock %}
