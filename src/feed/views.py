@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from django.utils.timezone import now
 from django.views.decorators.http import require_POST
 from .utils import create_action, get_icon, filter_notifications
+from accounts.models import Client
 
 
 def error404(request):
@@ -146,3 +147,18 @@ def notification_view(request):
     for action in actions:
         action.icon = get_icon(action.type)
     return render(request, 'notifications.html', {'title': 'Notifications', 'actions': actions})
+
+
+@login_required(login_url='/login')
+def blog_list_view(request, username):
+    try:
+        user_instance = get_object_or_404(Client, username=username)
+        blogs = user_instance.posts.all()
+        print(blogs)
+        images = user_instance.image_posts.all()
+        print(images)
+        return render(request, 'blogs_and_images.html', {'title': 'Blog', 'blogs': blogs, 'images': images,
+                                                         'author': user_instance})
+    except Exception as e:
+        print(e)
+        return HttpResponse(e)
