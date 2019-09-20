@@ -42,5 +42,5 @@ urlpatterns = [
     path('see_add_response/<slug:app_id>', views.see_add_response, name='see_add_response'),
     path('org_profile/<slug:id>', views.get_org_profile, name='get_org_profile'),
     path('post_job', views.post_job, name='post_job'),
-    path('view_job/<slug:id>', views.view_job, name='view_job' )
+    path('view_job/<slug:id>', views.view_job, name='view_job')
 ]
