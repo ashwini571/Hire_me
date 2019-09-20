@@ -23,8 +23,7 @@
 		<!-- Search Bar -->
 		<div class="row">
 			<div class="col-md-12">
-                <form action="{% url 'accounts:search_job' %}" method="post">
-                    {% csrf_token %}
+                <form action="{% url 'accounts:search_job' %}" method="get">
 				<div class="intro-banner-search-form margin-top-95">
 
 					<!-- Search Field -->
@@ -64,10 +63,10 @@
 			<div class="col-xl-12">
 
 				<!-- Section Headline -->
-{#				<div class="section-headline margin-top-0 margin-bottom-35">#}
-{#					<h3>Recent Jobs</h3>#}
+				<div class="section-headline margin-top-0 margin-bottom-35">
+					<h3>Recent Jobs</h3>
 {#					<a href="jobs-list-layout-full-page-map.html" class="headline-link">Browse All Jobs</a>#}
-{#				</div>#}
+				</div>
 
 				<!-- Jobs Container -->
 				<div class="listings-container compact-list-layout margin-top-35">

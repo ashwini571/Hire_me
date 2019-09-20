@@ -12,6 +12,8 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.utils.timezone import now
 from feed.utils import create_action
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
 
 
 def home(request):
@@ -308,16 +310,29 @@ def search_people(request):
         key = request.POST.get('key')
         # this is for search with OR
         people = Client.objects.filter(Q(first_name__icontains=key)|Q( username__icontains=key)|Q( last_name__icontains=key))
-    else :
+    else:
         people=None
     return render(request, 'search_people.html', context={'people':people})
 
 
 def search_job(request):
-    if request.method == 'POST':
-        key = request.POST.get('key')
+    # if request.method == 'GET':
+        if request.GET.get('key'):
+            key = request.GET.get('key')
+        else:
+            key = " "
         jobs = JobApplication.objects.filter(Q(title__icontains=key)|Q(type__icontains=key)|Q( category__icontains=key)|Q( location__icontains=key))
+        paginator = Paginator(jobs, 2)  # Show 15 issues per page
+        page = request.GET.get('page', 1)
+        try:
+            jobs = paginator.get_page(page)
+        except PageNotAnInteger:
+            jobs = paginator.get_page(1)
+        except EmptyPage:
+            jobs = paginator.get_page(paginator.num_pages)
+
         print(jobs)
-    else:
-        jobs = None
-    return render(request, 'search_job.html', context={'jobs':jobs})
+    # else:
+    #     jobs = None
+
+        return render(request, 'search_job.html', context={'jobs':jobs})

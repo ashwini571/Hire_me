@@ -36,7 +36,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['gender', 'about', 'skills', 'resume', 'languages']
+        fields = ['resume', 'gender', 'about', 'languages']
         widgets = {
             'about': forms.Textarea(attrs={'rows': 4}),
         }

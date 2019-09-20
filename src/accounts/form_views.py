@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Certifications, Project, Education, Client, OrgProfile
 from .forms import UserProfileForm, EducationForm, ProjectForm, CertificationsForm
 import os
+from .resume_parser import extract_skills_func
 from HireMe import settings
 from django.contrib import auth, messages
 from .decorators import normal_user_required, company_required
@@ -91,7 +92,13 @@ def create_user_profile_view(request):
                     profile.resume = request.FILES.get('resume')
 
                 profile.save()
-                return redirect('accounts:add_education')
+                skills = extract_skills_func(profile.resume.path)
+                profile.skills.clear()
+                for skill in skills:
+                    print(skill)
+                    profile.skills.add(skill)
+                profile.save()
+                return redirect('accounts:skills_upload')
             else:
                 print(form.errors)
                 context = {'title': 'Profile', 'form': form}
@@ -208,6 +215,7 @@ def create_edit_company_profile(request):
         why_us = request.POST.get('why_us')
         fields = request.POST.get('fields')
         teams = request.POST.get('teams')
+        location = request.POST.get('location')
         user = request.user
         try:
             profile = get_object_or_404(OrgProfile, user=request.user)
@@ -215,6 +223,7 @@ def create_edit_company_profile(request):
             profile.mis_vis = mis_vis
             profile.why = why_us
             profile.teams = teams
+            profile.location = location
             fields = fields.split(',')
             profile.area_of_work.clear()
             for field in fields:
@@ -253,3 +262,20 @@ def create_edit_company_profile(request):
 
     else:
         return redirect('accounts:settings')
+
+
+@login_required(login_url='/login')
+@normal_user_required
+def skills_upload(request):
+    if request.method == 'POST':
+        profile = request.user.profile
+        skills = request.POST.get('skills')
+        skills = skills.split(',')
+        profile.skills.clear()
+        for skill in skills:
+            print(skill)
+            profile.skills.add(skill)
+        profile.save()
+        return redirect('accounts:add_education')
+    else:
+        return render(request, 'skills.html', context={'user': request.user})

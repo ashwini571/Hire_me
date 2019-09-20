@@ -44,7 +44,14 @@
                         <div class="card">
                             <form action="{% url 'feed:add_image_post' %}" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                {{ form.as_p }}
+                                <h3>Caption</h3>
+                                {{ form.caption }}
+                    <div class="sidebar-widget">
+					  <h3>Image</h3>
+					  <div class="attachments-container">
+                        {{ form.image }}
+                      </div>
+				     </div>
                                 <button class="button button-sliding-icon ripple-effect margin-top-10" type="submit" >Post <i class="icon-material-outline-add-photo-alternate"></i></button>
                             </form>
                         </div>
