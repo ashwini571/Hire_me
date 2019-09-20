@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+    <!-- Titlebar
+================================================== -->
+<div id="titlebar" class="gradient">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2>Add to your Profile</h2>
+
+				<!-- Breadcrumbs -->
+
+			</div>
+		</div>
+	</div>
+</div>
+
+ <!-- Page Content
+================================================== -->
+<div class="container">
+	<div class="row">
+		<div class="col-xl-8 offset-xl-2">
+
+
+			<div class="login-register-page">
+				<!-- Welcome Text -->
+				<div class="welcome-text">
+					<h3>A complete profile will increase your chances</h3>
+				</div>
+				<!-- Form -->
+
+                    <div class="">
+                        <div class="card">
+                            <form action="{% url 'accounts:skills_upload' %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="submit-field">
+											<h5>Skills <i class="help-icon" data-tippy-placement="right" title="Add up to 10 skills"></i></h5>
+
+											<!-- Skills List -->
+											<div class="keywords-container">
+												<div class="keyword-input-container">
+													<input id="1" type="text" class="keyword-input with-border" value="{{ user.profile.skills.all|join:',' }}" name='skills'>
+
+												</div>
+												<div class="keywords-list">
+                                                   {% for skill in user.profile.skills.all %}
+													<span class="keyword"><span class="keyword-text"></span><span class="keyword-text">{{ skill }}</span></span>
+                                                    {% endfor %}
+												</div>
+												<div class="clearfix"></div>
+                                                <script>
+                                                    console.log(document.getElementById('1').value);
+                                                </script>
+
+											</div>
+										</div>
+                                <button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" >Save Changes <i class="icon-material-outline-add"></i></button>
+                            </form>
+                        </div>
+                    </div>
+
+
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+    <br>
+    <br>
+    <br>
+
+
+{%  endif %}
+
+
+{%  endblock %}
