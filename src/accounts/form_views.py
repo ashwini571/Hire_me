@@ -208,6 +208,7 @@ def create_edit_company_profile(request):
         why_us = request.POST.get('why_us')
         fields = request.POST.get('fields')
         teams = request.POST.get('teams')
+        location = request.POST.get('location')
         user = request.user
         try:
             profile = get_object_or_404(OrgProfile, user=request.user)
@@ -215,6 +216,7 @@ def create_edit_company_profile(request):
             profile.mis_vis = mis_vis
             profile.why = why_us
             profile.teams = teams
+            profile.location = location
             fields = fields.split(',')
             profile.area_of_work.clear()
             for field in fields:

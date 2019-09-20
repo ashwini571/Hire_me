@@ -93,7 +93,7 @@
 											</div>
 										</div>
 									</div>
-                                   <div class="col-xl-8">
+                                   <div class="col-xl-4">
 										<div class="submit-field">
 											<h5>Our Team </h5>
 
@@ -104,9 +104,25 @@
 
 												</div>
 												<div class="keywords-list">
-                                                   {% for team in user.profile_org.teams.entity_as_list %}
+                                                   {% for team in user.profile_org.teams_as_list %}
 													<span class="keyword"><span class="keyword-text"></span><span class="keyword-text">{{ team }}</span></span>
                                                     {% endfor %}
+												</div>
+												<div class="clearfix"></div>
+
+
+											</div>
+										</div>
+									</div>
+                                        <div class="col-xl-4">
+										<div class="submit-field">
+											<h5>Location</h5>
+
+											<!-- AOW List -->
+											<div class="keywords-container">
+												<div class="keyword-input-container">
+													<input id="1" type="text" class="keyword-input with-border" value="{{ user.profile_org.location}}" name='location'>
+
 												</div>
 												<div class="clearfix"></div>
 
