@@ -111,6 +111,13 @@ network platform for simplifying the hiring process.
 - Entity Relation Diagram
 ![Company Profile](https://res.cloudinary.com/dz2bsme0a/image/upload/v1569019424/HireMe/ERD.png)
 
+## Scope
+
+This project has the scope of becoming a full fledged Job seeking portal. There are lot of features that still need to be implemented. Some of them are -:
+1. Improving Search functionality. (Honestly it is a whole project)
+2. Adding messeging system.
+3. Follow recommendations for user
+4. Potential candidate recommendations for companies.
 
 ## Our Team
 | S. No	| Name 	    | Registration Number|
@@ -120,3 +127,7 @@ network platform for simplifying the hiring process.
 |   3.	| [Nikhil Pankaj Agarwal](https://github.com/NikhilAgrawal3012) 		    |  20175015       |
 
 
+## Contact us
+ **Email** - binary.compatible@gmail.com
+
+**This Project was the first place winner @Innodev MNNIT.**
